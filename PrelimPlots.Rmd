@@ -1,0 +1,249 @@
+---
+title: "PrelimPlots"
+author: "Rachel Lee"
+date: "4/3/2020"
+output: html_document
+---
+```{r data}
+library(tidyverse)
+
+
+cmpst_all = read_csv(file = "/Users/rachellee/Google Drive/Practicum/Data/cmpst_all.csv") %>%
+ janitor::clean_names() %>%
+ mutate( visit = forcats::fct_relevel(visit, c("Screen", "Baseline", "Week3", "Week6", "Week9", "Week14", "Week24")))
+
+
+#names(cmpst_all)
+
+
+str(cmpst_all)
+
+
+```
+
+Stroop: The Stroop Color and Word Test (SCWT) is a neuropsychological test extensively used to assess the ability to inhibit cognitive interference that occurs when the processing of a specific stimulus feature impedes the simultaneous processing of a second stimulus attribute, well-known as the Stroop Effect. 
+
+```{r stroop}
+
+#baseline data 
+
+cmpst_all %>%
+  select(patient_id, visit, stroop_color, stroop_word, stroop_color_word) %>%
+  filter(visit == "Baseline") %>%
+  drop_na() %>%
+  summarize(
+    n(),
+    mean_color = mean(stroop_color),
+    sd_color = sd(stroop_color), 
+    mean_word = mean(stroop_word),
+    sd_word = sd(stroop_word),
+    mean_colorword = mean(stroop_color_word),
+    sd_colorword = sd(stroop_color_word)
+  ) %>%
+ knitr::kable()
+  
+```
+
+
+HVLT: Hopkins Verbal Learning test, assess acquisition and delayed recall, detecting the earliest signs of dementia 
+
+```{r hvlt_immed}
+
+#longitudinal plots
+cmpst_hvlt <- select(cmpst_all, patient_id, gender, visit, hvlt_immed, hvlt_discrim) 
+
+cmpst_hvlt %>%
+  filter(patient_id == 4000) %>%
+  ggplot(aes(x=visit, y = hvlt_immed)) +
+  geom_point() 
+
+
+#calculate the difference
+cmpst_hvlt_immed <- cmpst_hvlt %>%
+  select(patient_id, gender, visit, hvlt_immed) %>%
+  drop_na() %>%
+ pivot_wider(
+  names_from = "visit",
+  values_from = "hvlt_immed",
+  ) %>%
+  select(-Week24) %>%
+  mutate(
+    change = Week14 - Baseline
+  )
+
+cmpst_hvlt_immed 
+
+```
+
+Comment: Lots of observations are missing Week14. 
+
+
+```{r hvlt_discrim}
+
+#longitudinal plots
+cmpst_hvlt %>%
+  filter(patient_id == 4001) %>%
+  ggplot(aes(x=visit, y = hvlt_discrim)) +
+  geom_point() 
+
+
+#calculate the difference
+cmpst_hvlt_discrim <- cmpst_all %>%
+  select(patient_id, gender, visit, hvlt_discrim) %>%
+  drop_na() %>%
+ pivot_wider(
+  names_from = "visit",
+  values_from = "hvlt_discrim",
+  ) %>%
+  select(-Week24) %>%
+  mutate(
+    change = Week14 - Baseline
+  )
+
+cmpst_hvlt_discrim
+
+```
+
+Comment: Lots of observations are missing Week14. 
+
+
+
+Treatment Rational Scale
+
+```{r trs}
+cmpst_trs <- cmpst_all %>%
+  select(patient_id, gender, visit, trs_total) 
+
+#longitudinal plot
+
+cmpst_trs %>%
+  filter(patient_id == 4001) %>%
+  ggplot(aes(x=visit, y=trs_total)) +
+  geom_point()
+
+
+#calculate the difference
+
+cmpst_trs <- cmpst_all %>%
+  select(patient_id, gender, visit, trs_total) %>%
+  drop_na() %>%
+ pivot_wider(
+  names_from = "visit",
+  values_from = "trs_total",
+  ) %>%
+  mutate(
+    change = Week14 - Week3
+  )
+
+cmpst_trs
+
+```
+
+
+PANAS: Positive & Negative Affect 
+Scores can range from 10-50 for both the Positive and Negative Affect with the lower scores representing lower levels of Positive/Negative Affect and higher scores representing higher levels of Positive/Negative Affect. Participants utilizing PANAS use a 5-point scale in which they determine if a concept applies. 
+
+```{r panas}
+
+cmpst_panas <- cmpst_all %>%
+  select(patient_id, gender, visit, pos_affect, neg_affect) 
+
+cmpst_panas_pos <- cmpst_panas %>%
+  select(patient_id, gender, visit, pos_affect)
+
+cmpst_panas_neg <- cmpst_panas %>%
+  select(patient_id, gender, visit, neg_affect)
+
+#Logitudinal plot
+
+cmpst_panas_pos %>%
+  filter(patient_id == 4001) %>%
+  ggplot(aes(x=visit, y=pos_affect)) +
+  geom_point() 
+
+cmpst_panas_neg %>%
+  filter(patient_id == 4001) %>%
+  ggplot(aes(x=visit, y=neg_affect)) +
+  geom_point()
+
+##calculate the difference of posaffect
+
+cmpst_panas_pos <- cmpst_panas_pos %>%
+  drop_na() %>%
+ pivot_wider(
+  names_from = "visit",
+  values_from = "pos_affect",
+  ) %>%
+  mutate(
+    change = Week14 - Baseline
+  )
+cmpst_panas_pos
+
+##calculate the difference of negaffect
+
+cmpst_panas_neg <- cmpst_panas_neg %>%
+  drop_na() %>%
+ pivot_wider(
+  names_from = "visit",
+  values_from = "neg_affect",
+  ) %>%
+  mutate(
+    change = Week14 - Baseline
+  )
+cmpst_panas_neg
+
+
+```
+
+Montgomery-Åsberg Depression Rating Scale. 
+This test is used by clinicians to assess the severity of depression among patients who have a diagnosis of depression. The MADRS includes 10 items and uses a 0 to 6 severity scale, scored following the interview.  Higher scores indicate increasing depressive symptoms. Ratings can be added to form an overall score (range 0 to 50); no weights are used. Cut-off points include: 0 to 6 – symptom absent, 7 to 19 – mild depression, 30 to 34 – moderate, 35 to 60 – severe depression. 
+
+```{r madrs}
+cmpst_madrs <- cmpst_all %>%
+  select(patient_id, gender, visit, madrs_total) 
+
+cmpst_madrs
+
+#Logitudinal plot
+
+cmpst_madrs %>%
+  filter(patient_id == 4007) %>%
+  ggplot(aes(x = visit, y = madrs_total )) +
+  geom_point() 
+
+
+##calculate the difference of negaffect
+
+
+cmpst_madrs <- cmpst_madrs %>%
+   mutate( visit = forcats::fct_relevel(visit, c("Screen", "Baseline", "Week3", "Week6", "Week9", "Week14", "Week24"))) %>%
+  drop_na() %>%
+ pivot_wider(
+  names_from = "visit",
+  values_from = "madrs_total",
+  ) %>%
+  mutate(
+    change = Week14 - Baseline
+  ) %>%
+   janitor::clean_names() %>%
+  select(-end_of_treatment) 
+
+
+
+
+cmpst_madrs
+```
+
+
+
+
+
+```{r dssi}
+
+```
+
+
+```{r whoq}
+
+```
+
