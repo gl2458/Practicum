@@ -270,11 +270,42 @@ Note: only 10 non-missing observations at week 14
 
 Treatment Rational Scale
 
-```{r trs}
+Since TRS does not have baseline data, we will treat week 3 as baseline. 
+```{r trs_total_wk3}
+
+#extract trs_total
+
 cmpst_trs_total <- cmpst_all %>%
   select(patient_id, gender, visit, trs_total) 
 
 
+#trs_total at week3
+cmpst_trs_total_wk3 <- cmpst_trs_total %>%
+  filter(visit == "Week3")
+
+
+
+#Week3 Summary Statistics
+
+##N, mean, sd, median, IQR
+cmpst_trs_total_wk3 %>%
+  drop_na() %>%
+  summarize(
+    n(),
+    mean_color = mean(trs_total),
+    sd_color = sd(trs_total), 
+    median_color = median(trs_total),
+    iqr_color = IQR(trs_total)
+  ) %>%
+ knitr::kable()
+
+##Count missing
+cmpst_trs_total_wk3 %>%
+  select(trs_total) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+##Quantile
+quantile(cmpst_trs_total_wk3$trs_total, na.rm = TRUE)
 
 
 ```
