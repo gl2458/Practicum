@@ -1,0 +1,291 @@
+---
+title: "summarystatistics"
+author: "Rachel Lee"
+date: "4/6/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r data}
+
+library(tidyverse)
+
+cmpst_all = read_csv(file = "/Users/rachellee/Google Drive/Practicum/Data/cmpst_all.csv") %>%
+ janitor::clean_names() %>%
+ mutate( visit = forcats::fct_relevel(visit, c("Screen", "Baseline", "Week3", "Week6", "Week9", "Week14", "Week24")))
+
+```
+
+Stroop: The Stroop Color and Word Test (SCWT) is a neuropsychological test extensively used to assess the ability to inhibit cognitive interference that occurs when the processing of a specific stimulus feature impedes the simultaneous processing of a second stimulus attribute, well-known as the Stroop Effect. 
+
+Stroop_Color
+
+```{r StroopColorBL}
+
+cmpst_stroop_color <- cmpst_all %>%
+  select(patient_id, visit, stroop_color) %>%
+  filter(visit == "Baseline") 
+
+
+cmpst_stroop_color %>%
+  drop_na() %>%
+  summarize(
+    n(),
+    mean_color = mean(stroop_color),
+    sd_color = sd(stroop_color), 
+    median_color = median(stroop_color),
+    iqr_color = IQR(stroop_color)
+  ) %>%
+ knitr::kable()
+
+#Count missing
+cmpst_stroop_color %>%
+  select(stroop_color) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+#Quantile
+quantile(cmpst_stroop_color$stroop_color, na.rm = TRUE)
+
+```
+
+
+Stroop_Word
+
+```{r StroopWordBL}
+
+cmpst_stroop_word <- cmpst_all %>%
+  select(patient_id, visit, stroop_word) %>%
+  filter(visit == "Baseline") 
+
+
+cmpst_stroop_word %>%
+  drop_na() %>%
+  summarize(
+    n(),
+    mean_word = mean(stroop_word),
+    sd_word = sd(stroop_word), 
+    median_word = median(stroop_word),
+    iqr_word = IQR(stroop_word)
+  ) %>%
+ knitr::kable()
+
+#Count missing
+cmpst_stroop_word %>%
+  select(stroop_word) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+#Quantile
+quantile(cmpst_stroop_word$stroop_word, na.rm = TRUE)
+
+```
+
+
+Stroop_Color_Word
+
+```{r StroopColorWordBL}
+
+cmpst_stroop_color_word <- cmpst_all %>%
+  select(patient_id, visit, stroop_color_word) %>%
+  filter(visit == "Baseline") 
+
+#Baseline Summary Statistics
+
+##N, mean, sd, median, IQR
+cmpst_stroop_color_word %>%
+  drop_na() %>%
+  summarize(
+    n(),
+    mean_color = mean(stroop_color_word),
+    sd_color = sd(stroop_color_word), 
+    median_color = median(stroop_color_word),
+    iqr_color = IQR(stroop_color_word)
+  ) %>%
+ knitr::kable()
+
+##Count missing
+cmpst_stroop_color_word %>%
+  select(stroop_color_word) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+##Quantile
+quantile(cmpst_stroop_color_word$stroop_color_word, na.rm = TRUE)
+
+```
+
+
+HVLT: Hopkins Verbal Learning test, assess acquisition and delayed recall, detecting the earliest signs of dementia. Includes 'hvlt_immed' and 'hvlt_discrim'
+
+
+i) hvlt_immed at baseline
+
+```{r hvlt_immed_baseline}
+
+#extract hvlt_immed and hvlt_discrim
+cmpst_hvlt <- select(cmpst_all, patient_id, gender, visit, hvlt_immed, hvlt_discrim) 
+
+#extract hvlt_immed
+cmpst_hvlt_immed <- cmpst_hvlt %>%
+  select(patient_id, gender, visit, hvlt_immed) 
+
+#hvlt_immed at baseline
+cmpst_hvlt_immed_bl <- cmpst_hvlt_immed %>%
+  filter(visit == "Baseline")
+
+#Baseline Summary Statistics
+
+##N, mean, sd, median, IQR
+cmpst_hvlt_immed_bl %>%
+  drop_na() %>%
+  summarize(
+    n(),
+    mean_color = mean(hvlt_immed),
+    sd_color = sd(hvlt_immed), 
+    median_color = median(hvlt_immed),
+    iqr_color = IQR(hvlt_immed)
+  ) %>%
+ knitr::kable()
+
+##Count missing
+cmpst_hvlt_immed_bl %>%
+  select(hvlt_immed) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+##Quantile
+quantile(cmpst_hvlt_immed_bl$hvlt_immed, na.rm = TRUE)
+
+```
+
+ii) hvlt_immed at week 14
+
+```{r hvlt_immed_week14}
+
+#extract hvlt_immed at week14
+cmpst_hvlt_immed_wk14 <- cmpst_hvlt_immed %>%
+  filter(visit == "Week14")
+
+
+#Week14 Summary Statistics
+
+
+##N, mean, sd, median, IQR
+cmpst_hvlt_immed_wk14 %>%
+  drop_na() %>%
+  summarize(
+    n(),
+    mean_color = mean(hvlt_immed),
+    sd_color = sd(hvlt_immed), 
+    median_color = median(hvlt_immed),
+    iqr_color = IQR(hvlt_immed)
+  ) %>%
+ knitr::kable()
+
+##Count missing
+cmpst_hvlt_immed_wk14 %>%
+  select(hvlt_immed) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+##Quantile
+quantile(cmpst_hvlt_immed_wk14$hvlt_immed, na.rm = TRUE)
+```
+
+Note: only 10 non-missing observations at week 14 
+
+
+iii) hvlt_discrim at baseline
+
+```{r hvlt_discrim_baseline}
+
+#extract hvlt_discrim
+cmpst_hvlt_discrim <- cmpst_hvlt %>%
+  select(patient_id, gender, visit, hvlt_discrim) 
+
+#hvlt_discrim at baseline
+cmpst_hvlt_discrim_bl <- cmpst_hvlt_discrim %>%
+  filter(visit == "Baseline")
+
+#Baseline Summary Statistics
+
+##N, mean, sd, median, IQR
+cmpst_hvlt_discrim_bl %>%
+  drop_na() %>%
+  summarize(
+    n(),
+    mean_color = mean(hvlt_discrim),
+    sd_color = sd(hvlt_discrim), 
+    median_color = median(hvlt_discrim),
+    iqr_color = IQR(hvlt_discrim)
+  ) %>%
+ knitr::kable()
+
+##Count missing
+cmpst_hvlt_discrim_bl %>%
+  select(hvlt_discrim) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+##Quantile
+quantile(cmpst_hvlt_discrim_bl$hvlt_discrim, na.rm = TRUE)
+
+```
+
+iv) hvlt_discrim at week 14
+
+```{r}
+
+
+#hvlt_discrim at week 14
+cmpst_hvlt_discrim_wk14 <- cmpst_hvlt_discrim %>%
+  filter(visit == "Week14")
+
+#Baseline Summary Statistics
+
+##N, mean, sd, median, IQR
+cmpst_hvlt_discrim_wk14 %>%
+  drop_na() %>%
+  summarize(
+    n(),
+    mean_color = mean(hvlt_discrim),
+    sd_color = sd(hvlt_discrim), 
+    median_color = median(hvlt_discrim),
+    iqr_color = IQR(hvlt_discrim)
+  ) %>%
+ knitr::kable()
+
+##Count missing
+cmpst_hvlt_discrim_wk14 %>%
+  select(hvlt_discrim) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+##Quantile
+quantile(cmpst_hvlt_discrim_wk14$hvlt_discrim, na.rm = TRUE)
+
+```
+
+Note: only 10 non-missing observations at week 14 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
