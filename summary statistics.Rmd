@@ -311,10 +311,38 @@ quantile(cmpst_trs_total_wk3$trs_total, na.rm = TRUE)
 ```
 
 
+```{r trs_total_wk14}
+
+
+#trs_total at week14
+cmpst_trs_total_wk14 <- cmpst_trs_total %>%
+  filter(visit == "Week14")
 
 
 
+#Week3 Summary Statistics
 
+##N, mean, sd, median, IQR
+cmpst_trs_total_wk14 %>%
+  drop_na() %>%
+  summarize(
+    n(),
+    mean_color = mean(trs_total),
+    sd_color = sd(trs_total), 
+    median_color = median(trs_total),
+    iqr_color = IQR(trs_total)
+  ) %>%
+ knitr::kable()
+
+##Count missing
+cmpst_trs_total_wk14 %>%
+  select(trs_total) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+##Quantile
+quantile(cmpst_trs_total_wk14$trs_total, na.rm = TRUE)
+
+```
 
 
 
