@@ -35,10 +35,10 @@ cmpst_stroop_color %>%
   drop_na() %>%
   summarize(
     n(),
-    mean_color = mean(stroop_color),
-    sd_color = sd(stroop_color), 
-    median_color = median(stroop_color),
-    iqr_color = IQR(stroop_color)
+    mean = mean(stroop_color),
+    sd = sd(stroop_color), 
+    median = median(stroop_color),
+    IQR = IQR(stroop_color)
   ) %>%
  knitr::kable()
 
@@ -66,10 +66,10 @@ cmpst_stroop_word %>%
   drop_na() %>%
   summarize(
     n(),
-    mean_word = mean(stroop_word),
-    sd_word = sd(stroop_word), 
-    median_word = median(stroop_word),
-    iqr_word = IQR(stroop_word)
+    mean = mean(stroop_word),
+    sd = sd(stroop_word), 
+    median = median(stroop_word),
+    IQR = IQR(stroop_word)
   ) %>%
  knitr::kable()
 
@@ -99,10 +99,10 @@ cmpst_stroop_color_word %>%
   drop_na() %>%
   summarize(
     n(),
-    mean_color = mean(stroop_color_word),
-    sd_color = sd(stroop_color_word), 
-    median_color = median(stroop_color_word),
-    iqr_color = IQR(stroop_color_word)
+    mean = mean(stroop_color_word),
+    sd = sd(stroop_color_word), 
+    median = median(stroop_color_word),
+    IQR = IQR(stroop_color_word)
   ) %>%
  knitr::kable()
 
@@ -142,10 +142,10 @@ cmpst_hvlt_immed_bl %>%
   drop_na() %>%
   summarize(
     n(),
-    mean_color = mean(hvlt_immed),
-    sd_color = sd(hvlt_immed), 
-    median_color = median(hvlt_immed),
-    iqr_color = IQR(hvlt_immed)
+    mean = mean(hvlt_immed),
+    sd = sd(hvlt_immed), 
+    median = median(hvlt_immed),
+    IQR = IQR(hvlt_immed)
   ) %>%
  knitr::kable()
 
@@ -176,10 +176,10 @@ cmpst_hvlt_immed_wk14 %>%
   drop_na() %>%
   summarize(
     n(),
-    mean_color = mean(hvlt_immed),
-    sd_color = sd(hvlt_immed), 
-    median_color = median(hvlt_immed),
-    iqr_color = IQR(hvlt_immed)
+    mean = mean(hvlt_immed),
+    sd = sd(hvlt_immed), 
+    median = median(hvlt_immed),
+    iqr = IQR(hvlt_immed)
   ) %>%
  knitr::kable()
 
@@ -214,10 +214,10 @@ cmpst_hvlt_discrim_bl %>%
   drop_na() %>%
   summarize(
     n(),
-    mean_color = mean(hvlt_discrim),
-    sd_color = sd(hvlt_discrim), 
-    median_color = median(hvlt_discrim),
-    iqr_color = IQR(hvlt_discrim)
+    mean = mean(hvlt_discrim),
+    sd = sd(hvlt_discrim), 
+    median = median(hvlt_discrim),
+    IQR = IQR(hvlt_discrim)
   ) %>%
  knitr::kable()
 
@@ -233,7 +233,7 @@ quantile(cmpst_hvlt_discrim_bl$hvlt_discrim, na.rm = TRUE)
 
 iv) hvlt_discrim at week 14
 
-```{r}
+```{r hvlt_discrim_wk14}
 
 
 #hvlt_discrim at week 14
@@ -247,10 +247,10 @@ cmpst_hvlt_discrim_wk14 %>%
   drop_na() %>%
   summarize(
     n(),
-    mean_color = mean(hvlt_discrim),
-    sd_color = sd(hvlt_discrim), 
-    median_color = median(hvlt_discrim),
-    iqr_color = IQR(hvlt_discrim)
+    mean = mean(hvlt_discrim),
+    sd = sd(hvlt_discrim), 
+    median = median(hvlt_discrim),
+    IQR = IQR(hvlt_discrim)
   ) %>%
  knitr::kable()
 
@@ -267,10 +267,10 @@ quantile(cmpst_hvlt_discrim_wk14$hvlt_discrim, na.rm = TRUE)
 Note: only 10 non-missing observations at week 14 
 
 
-
 Treatment Rational Scale
 
-Since TRS does not have baseline data, we will treat week 3 as baseline. 
+Since TRS does not have baseline data, we will treat week 3 as baseline.
+
 ```{r trs_total_wk3}
 
 #extract trs_total
@@ -292,10 +292,10 @@ cmpst_trs_total_wk3 %>%
   drop_na() %>%
   summarize(
     n(),
-    mean_color = mean(trs_total),
-    sd_color = sd(trs_total), 
-    median_color = median(trs_total),
-    iqr_color = IQR(trs_total)
+    mean = mean(trs_total),
+    sd = sd(trs_total), 
+    median = median(trs_total),
+    IQR = IQR(trs_total)
   ) %>%
  knitr::kable()
 
@@ -313,7 +313,6 @@ quantile(cmpst_trs_total_wk3$trs_total, na.rm = TRUE)
 
 ```{r trs_total_wk14}
 
-
 #trs_total at week14
 cmpst_trs_total_wk14 <- cmpst_trs_total %>%
   filter(visit == "Week14")
@@ -327,10 +326,10 @@ cmpst_trs_total_wk14 %>%
   drop_na() %>%
   summarize(
     n(),
-    mean_color = mean(trs_total),
-    sd_color = sd(trs_total), 
-    median_color = median(trs_total),
-    iqr_color = IQR(trs_total)
+    mean= mean(trs_total),
+    sd = sd(trs_total), 
+    median = median(trs_total),
+    IQR = IQR(trs_total)
   ) %>%
  knitr::kable()
 
@@ -345,16 +344,536 @@ quantile(cmpst_trs_total_wk14$trs_total, na.rm = TRUE)
 ```
 
 
+PANAS: Positive & Negative Affect 
+Scores can range from 10-50 for both the Positive and Negative Affect with the lower scores representing lower levels of Positive/Negative Affect and higher scores representing higher levels of Positive/Negative Affect. Participants utilizing PANAS use a 5-point scale in which they determine if a concept applies. 
+
+
+Positive Affect
+
+```{r panas_positive_bl}
+
+
+#extract pos_affect 
+
+cmpst_pos_affect <- cmpst_all %>%
+  select(patient_id, gender, visit, pos_affect) 
+
+
+#pos_affect at baseline
+cmpst_pos_affect_bl <- cmpst_pos_affect %>%
+  filter(visit == "Baseline")
 
 
 
+#Baseline Summary Statistics
+
+##N, mean, sd, median, IQR
+cmpst_pos_affect_bl %>%
+  drop_na() %>%
+  summarize(
+    n(),
+    mean = mean(pos_affect),
+    sd = sd(pos_affect), 
+    median = median(pos_affect),
+    IQR = IQR(pos_affect)
+  ) %>%
+ knitr::kable()
+
+##Count missing
+cmpst_pos_affect_bl %>%
+  select(pos_affect) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+##Quantile
+quantile(cmpst_pos_affect_bl$pos_affect, na.rm = TRUE)
+
+
+```
+
+
+```{r panas_positive_wk14}
+
+#pos_affect at week14
+cmpst_pos_affect_wk14 <- cmpst_pos_affect %>%
+  filter(visit == "Week14")
+
+#Week14 Summary Statistics
+
+##N, mean, sd, median, IQR
+cmpst_pos_affect_wk14 %>%
+  drop_na() %>%
+  summarize(
+    n(),
+    mean = mean(pos_affect),
+    sd = sd(pos_affect), 
+    median = median(pos_affect),
+    IQR = IQR(pos_affect)
+  ) %>%
+ knitr::kable()
+
+##Count missing
+cmpst_pos_affect_wk14 %>%
+  select(pos_affect) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+##Quantile
+quantile(cmpst_pos_affect_wk14$pos_affect, na.rm = TRUE)
+
+```
 
 
 
+Negative Affect
+
+```{r panas_negative_bl}
+
+#extract neg_affect 
+
+cmpst_neg_affect <- cmpst_all %>%
+  select(patient_id, gender, visit, neg_affect) 
+
+#pos_affect at baseline
+cmpst_neg_affect_bl <- cmpst_neg_affect %>%
+  filter(visit == "Baseline")
 
 
 
+#Baseline Summary Statistics
+
+##N, mean, sd, median, IQR
+cmpst_neg_affect_bl %>%
+  drop_na() %>%
+  summarize(
+    n(),
+    mean = mean(neg_affect),
+    sd = sd(neg_affect), 
+    median = median(neg_affect),
+    IQR = IQR(neg_affect)
+  ) %>%
+ knitr::kable()
+
+##Count missing
+cmpst_neg_affect_bl %>%
+  select(neg_affect) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+##Quantile
+quantile(cmpst_neg_affect_bl$neg_affect, na.rm = TRUE)
+
+
+```
+
+
+```{r panas_negative_wk14}
+
+#neg_affect at week14
+cmpst_neg_affect_wk14 <- cmpst_neg_affect %>%
+  filter(visit == "Week14")
+
+#Week14 Summary Statistics
+
+##N, mean, sd, median, IQR
+cmpst_neg_affect_wk14 %>%
+  drop_na() %>%
+  summarize(
+    n(),
+    mean = mean(neg_affect),
+    sd = sd(neg_affect), 
+    median = median(neg_affect),
+    IQR = IQR(neg_affect)
+  ) %>%
+ knitr::kable()
+
+##Count missing
+cmpst_neg_affect_wk14 %>%
+  select(neg_affect) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+##Quantile
+quantile(cmpst_neg_affect_wk14$neg_affect, na.rm = TRUE)
+
+```
+
+
+Montgomery-Åsberg Depression Rating Scale (MADRS) 
+This test is used by clinicians to assess the severity of depression among patients who have a diagnosis of depression. The MADRS includes 10 items and uses a 0 to 6 severity scale, scored following the interview.  Higher scores indicate increasing depressive symptoms. Ratings can be added to form an overall score (range 0 to 50); no weights are used. Cut-off points include: 0 to 6 – symptom absent, 7 to 19 – mild depression, 30 to 34 – moderate, 35 to 60 – severe depression. 
+
+
+MADRS at Baseline
+
+```{r madrs_bl}
+
+#exttract madrs_total
+
+cmpst_madrs <- cmpst_all %>%
+  select(patient_id, gender, visit, madrs_total) 
+
+
+#madrs_total at baseline
+cmpst_madrs_bl <- cmpst_madrs %>%
+  filter(visit == "Baseline")
+
+
+#Baseline Summary Statistics
+
+##N, mean, sd, median, IQR
+cmpst_madrs_bl %>%
+  drop_na() %>%
+  summarize(
+    n(),
+    mean = mean(madrs_total),
+    sd = sd(madrs_total), 
+    median = median(madrs_total),
+    IQR = IQR(madrs_total)
+  ) %>%
+ knitr::kable()
+
+##Count missing
+cmpst_madrs_bl %>%
+  select(madrs_total) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+##Quantile
+quantile(cmpst_madrs_bl$madrs_total, na.rm = TRUE)
+
+
+```
+
+MADRS at Week 14
+
+```{r madrs_wk14}
+
+#madrs_total at week14
+cmpst_madrs_wk14 <- cmpst_madrs %>%
+  filter(visit == "Week14")
+
+
+#Baseline Summary Statistics
+
+##N, mean, sd, median, IQR
+cmpst_madrs_wk14 %>%
+  drop_na() %>%
+  summarize(
+    n(),
+    mean = mean(madrs_total),
+    sd = sd(madrs_total), 
+    median = median(madrs_total),
+    IQR = IQR(madrs_total)
+  ) %>%
+ knitr::kable()
+
+##Count missing
+cmpst_madrs_wk14 %>%
+  select(madrs_total) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+##Quantile
+quantile(cmpst_madrs_wk14$madrs_total, na.rm = TRUE)
+
+```
+
+
+DSSI
+
+Duke Social Support Index (DSSI) - Used to measure social support of the elderly. The 35-item DSSI measures multiple dimensions of social support of the elderly. The 23-item and 11-item versions have been used for the chronically ill and frail elderly.
+
+subscales: 
+i) DSSI-SI: social interaction 
+ii) DSSI-SS: subjective support
+iii) DSSI-IS: instrumental support  13-24
+iv) DSSI-NET: social networking. 1st question
+
+
+i-1) dssi_si at baseline
+
+```{r dssi_si_bl}
+
+#exttract dssi_si
+
+cmpst_dssi_si <- cmpst_all %>%
+  select(patient_id, gender, visit, dssi_si) 
+
+
+#dssi_si at baseline
+cmpst_dssi_si_bl <- cmpst_dssi_si %>%
+  filter(visit == "Baseline")
+
+
+#Baseline Summary Statistics
+
+##N, mean, sd, median, IQR
+cmpst_dssi_si_bl %>%
+  drop_na() %>%
+  summarize(
+    n(),
+    mean = mean(dssi_si),
+    sd = sd(dssi_si), 
+    median = median(dssi_si),
+    IQR = IQR(dssi_si)
+  ) %>%
+ knitr::kable()
+
+##Count missing
+cmpst_dssi_si_bl %>%
+  select(dssi_si) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+##Quantile
+quantile(cmpst_dssi_si_bl$dssi_si, na.rm = TRUE)
+
+
+```
+
+i-2) dssi_si at week 14
+
+```{r dssi_si_wk14}
+
+#dssi_si at week14
+cmpst_dssi_si_wk14 <- cmpst_dssi_si %>%
+  filter(visit == "Week14")
+
+
+#Baseline Summary Statistics
+
+##N, mean, sd, median, IQR
+cmpst_dssi_si_wk14 %>%
+  drop_na() %>%
+  summarize(
+    n(),
+    mean = mean(dssi_si),
+    sd = sd(dssi_si), 
+    median = median(dssi_si),
+    IQR = IQR(dssi_si)
+  ) %>%
+ knitr::kable()
+
+##Count missing
+cmpst_dssi_si_wk14 %>%
+  select(dssi_si) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+##Quantile
+quantile(cmpst_dssi_si_wk14$dssi_si, na.rm = TRUE)
+
+```
+
+ii-1) dssi_ss at baseline
+
+```{r}
+
+#exttract dssi_ss
+
+cmpst_dssi_ss <- cmpst_all %>%
+  select(patient_id, gender, visit, dssi_ss) 
+
+
+#dssi_si at baseline
+cmpst_dssi_ss_bl <- cmpst_dssi_ss %>%
+  filter(visit == "Baseline")
+
+
+#Baseline Summary Statistics
+
+##N, mean, sd, median, IQR
+cmpst_dssi_ss_bl %>%
+  drop_na() %>%
+  summarize(
+    n(),
+    mean = mean(dssi_ss),
+    sd = sd(dssi_ss), 
+    median = median(dssi_ss),
+    IQR = IQR(dssi_ss)
+  ) %>%
+ knitr::kable()
+
+##Count missing
+cmpst_dssi_ss_bl %>%
+  select(dssi_ss) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+##Quantile
+quantile(cmpst_dssi_ss_bl$dssi_ss, na.rm = TRUE)
+
+```
+
+
+ii-2) dssi_ss at week 14
+
+```{r}
+
+#dssi_si at week14
+cmpst_dssi_ss_wk14 <- cmpst_dssi_ss %>%
+  filter(visit == "Week14")
+
+
+#Baseline Summary Statistics
+
+##N, mean, sd, median, IQR
+cmpst_dssi_ss_wk14 %>%
+  drop_na() %>%
+  summarize(
+    n(),
+    mean = mean(dssi_ss),
+    sd = sd(dssi_ss), 
+    median = median(dssi_ss),
+    IQR = IQR(dssi_ss)
+  ) %>%
+ knitr::kable()
+
+##Count missing
+cmpst_dssi_ss_wk14 %>%
+  select(dssi_ss) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+##Quantile
+quantile(cmpst_dssi_ss_wk14$dssi_ss, na.rm = TRUE)
+
+
+```
+
+
+iii-1) dssi_is at baseline
+
+```{r}
+
+#exttract dssi_is
+
+cmpst_dssi_is <- cmpst_all %>%
+  select(patient_id, gender, visit, dssi_is) 
+
+
+#dssi_si at baseline
+cmpst_dssi_is_bl <- cmpst_dssi_is %>%
+  filter(visit == "Baseline")
+
+
+#Baseline Summary Statistics
+
+##N, mean, sd, median, IQR
+cmpst_dssi_is_bl %>%
+  drop_na() %>%
+  summarize(
+    n(),
+    mean = mean(dssi_is),
+    sd = sd(dssi_is), 
+    median = median(dssi_is),
+    IQR = IQR(dssi_is)
+  ) %>%
+ knitr::kable()
+
+##Count missing
+cmpst_dssi_is_bl %>%
+  select(dssi_is) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+##Quantile
+quantile(cmpst_dssi_is_bl$dssi_is, na.rm = TRUE)
+
+```
 
 
 
+iii-2) dssi_is at week 14
+
+```{r}
+
+#dssi_si at week14
+cmpst_dssi_is_wk14 <- cmpst_dssi_is %>%
+  filter(visit == "Week14")
+
+
+#Baseline Summary Statistics
+
+##N, mean, sd, median, IQR
+cmpst_dssi_is_wk14 %>%
+  drop_na() %>%
+  summarize(
+    n(),
+    mean = mean(dssi_is),
+    sd = sd(dssi_is), 
+    median = median(dssi_is),
+    IQR = IQR(dssi_is)
+  ) %>%
+ knitr::kable()
+
+##Count missing
+cmpst_dssi_is_wk14 %>%
+  select(dssi_is) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+##Quantile
+quantile(cmpst_dssi_is_wk14$dssi_is, na.rm = TRUE)
+
+```
+
+
+iv-1) dssi_net at baseline
+
+```{r}
+
+#exttract dssi_net
+
+cmpst_dssi_net <- cmpst_all %>%
+  select(patient_id, gender, visit, dssi_net) 
+
+
+#dssi_net at baseline
+cmpst_dssi_net_bl <- cmpst_dssi_net %>%
+  filter(visit == "Baseline")
+
+
+#Baseline Summary Statistics
+
+##N, mean, sd, median, IQR
+cmpst_dssi_net_bl %>%
+  drop_na() %>%
+  summarize(
+    n(),
+    mean = mean(dssi_net),
+    sd = sd(dssi_net), 
+    median = median(dssi_net),
+    IQR = IQR(dssi_net)
+  ) %>%
+ knitr::kable()
+
+##Count missing
+cmpst_dssi_net_bl %>%
+  select(dssi_net) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+##Quantile
+quantile(cmpst_dssi_net_bl$dssi_net, na.rm = TRUE)
+```
+
+iv-2) dssi_net at week 14 
+
+```{r}
+
+#dssi_net at week14
+cmpst_dssi_net_wk14 <- cmpst_dssi_net %>%
+  filter(visit == "Week14")
+
+
+#Baseline Summary Statistics
+
+##N, mean, sd, median, IQR
+cmpst_dssi_net_wk14 %>%
+  drop_na() %>%
+  summarize(
+    n(),
+    mean = mean(dssi_net),
+    sd = sd(dssi_net), 
+    median = median(dssi_net),
+    IQR = IQR(dssi_net)
+  ) %>%
+ knitr::kable()
+
+##Count missing
+cmpst_dssi_net_wk14 %>%
+  select(dssi_net) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+##Quantile
+quantile(cmpst_dssi_net_wk14$dssi_net, na.rm = TRUE)
+```
 
