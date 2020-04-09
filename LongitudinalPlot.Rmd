@@ -1,0 +1,108 @@
+---
+title: "longitudinal plots"
+author: "Rachel Lee"
+date: "4/8/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r data}
+
+library(tidyverse)
+
+cmpst_all = read_csv(file = "/Users/rachellee/Google Drive/Practicum/Data/cmpst_all.csv") %>%
+ janitor::clean_names() %>%
+ mutate( visit = forcats::fct_relevel(visit, c("Screen", "Baseline", "Week3", "Week6", "Week9", "Week14", "Week24")))
+
+```
+
+
+HVLT: 
+
+```{r hvlt}
+
+#data = cmpst_all
+#plot, x = visit, y = var of interest, grouped by "patient_id"
+
+ggplot(cmpst_all, aes(visit, hvlt_immed, group = patient_id) ) + geom_point() + geom_line()
+
+ggplot(cmpst_all, aes(visit, hvlt_discrim, group = patient_id) ) + geom_point() + geom_line()
+
+```
+
+Comments: Lots of loss to follow-up. Patient longitudinal analysis difficult. 
+
+
+Treatment Rationale Scale
+
+```{r trs_total}
+
+ggplot(cmpst_all, aes(visit, trs_total, group = patient_id) ) + geom_point() + geom_line()
+
+```
+Comments: Only week 3 and week 14 data available. Logitudinal analysis for each patient impossible. 
+
+
+
+PANAS
+
+```{r PANAS}
+
+ggplot(cmpst_all, aes(visit, pos_affect, group = patient_id) ) + geom_point() + geom_line()
+
+ggplot(cmpst_all, aes(visit, neg_affect, group = patient_id) ) + geom_point() + geom_line()
+
+```
+
+Comments: No observable trend in change. "neg_affect" decline with time? 
+
+
+MADRS: 
+
+```{r MADRS}
+
+ggplot(cmpst_all, aes(visit, madrs_total, group = patient_id) ) + geom_point() + geom_line()
+
+```
+Comments: Decline in "madrs_total" with time 
+
+
+```{r DSSI}
+
+ggplot(cmpst_all, aes(visit, dssi_si, group = patient_id) ) + geom_point() + geom_line()
+
+
+ggplot(cmpst_all, aes(visit, dssi_ss, group = patient_id) ) + geom_point() + geom_line()
+
+
+ggplot(cmpst_all, aes(visit, dssi_is, group = patient_id) ) + geom_point() + geom_line()
+
+
+ggplot(cmpst_all, aes(visit, dssi_net, group = patient_id) ) + geom_point() + geom_line()
+
+
+```
+
+Comments: No observable trend. Week 9, 14, 24 data analysis could be possible. 
+
+
+
+
+Writing Functions: 
+
+```{r functions}
+
+long_plot <- function(x_arg, y_arg) {
+  cmpst_all
+  ggplot(cmpst_all, aes (x= x_arg, y = y_arg, group = patient_id)) + geom_point() + geom_line()
+}
+
+long_plot(visit, hvlt_immed)
+
+```
+
+
+
