@@ -130,3 +130,87 @@ fit %>%
 
 
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+POSITIVE AFFECT
+
+```{r predictorchange}
+#calculate changes in positive affect
+
+cmpst_pos_affect_delta <- cmpst_panas_pos %>%
+ pivot_wider(
+   names_from = "visit",
+   values_from = "pos_affect",
+ ) %>%
+  mutate(pos_affect_delta3 = Week3 - Baseline) %>%
+  mutate(pos_affect_delta14 = Week14 - Baseline) %>%
+  select(patient_id, pos_affect_delta3, pos_affect_delta14)
+
+cmpst_pos_affect_delta
+
+```
+
+
+Joining datasets
+
+```{r jointdata}
+
+ham24tot_pos_affect =
+  left_join(cmpst_ham24tot_delta, cmpst_pos_affect_delta, by = "patient_id")
+
+ham24tot_pos_affect
+
+```
+
+Changes from Baseline to Week3 (POS AFFECT)
+
+```{r linearmodelweek3}
+
+
+#plotting change in neg_affect against change in ham24tot
+ggplot(ham24tot_pos_affect, aes(pos_affect_delta3, ham24tot_delta3) ) + geom_point() + geom_smooth() + facet_grid(~site)
+
+
+#fitting the model
+fit = lm(ham24tot_delta3 ~ pos_affect_delta3, data = ham24tot_pos_affect)
+
+fit %>%
+  broom::tidy() %>%
+  knitr::kable(digits =3)
+
+
+```
+
+
+Changes from Baseline to Week14 (POS AFFECT)
+
+```{r linearmodelweek14}
+
+
+#plotting change in neg_affect against change in ham24tot
+ggplot(ham24tot_neg_affect, aes(neg_affect_delta14, ham24tot_delta14) ) + geom_point() + geom_smooth() + facet_grid(~site)
+
+
+#fitting the model
+fit = lm(ham24tot_delta14 ~ neg_affect_delta14, data = ham24tot_neg_affect)
+
+fit %>%
+  broom::tidy() %>%
+  knitr::kable(digits =3)
+
+
+```
+
+Comment: inverse trend by site? 
+
