@@ -24,7 +24,7 @@ str(cmpst_all)
 
 ```{r outcomeEDA}
 #extract ham24tot 
-cmpst_ham24tot <- cmpst_all %>%
+data_ham24tot <- cmpst_all %>%
   select(patient_id, gender, site, visit, ham24tot)
 
 #longitudinal plot of ham24tot
@@ -37,7 +37,7 @@ Changes in ham24tot
 ```{r outcomechange}
 #calculate changes 
 
-cmpst_ham24tot_delta <- cmpst_ham24tot %>%
+data_ham24tot_delta <- data_ham24tot %>%
  pivot_wider(
    names_from = "visit",
    values_from = "ham24tot",
@@ -46,20 +46,20 @@ cmpst_ham24tot_delta <- cmpst_ham24tot %>%
   mutate(ham24tot_delta14 = Week14 - Baseline) %>%
   select(patient_id, gender, site, ham24tot_delta3, ham24tot_delta14)
 
-cmpst_ham24tot_delta
+data_ham24tot_delta
 
 ```
 
 Predictor varible dataframes
 
 ```{r predictorchange}
-cmpst_panas <- cmpst_all %>%
+data_panas <- cmpst_all %>%
   select(patient_id, gender, site, visit, pos_affect, neg_affect) 
 
-cmpst_panas_pos <- cmpst_panas %>%
+data_panas_pos <- cmpst_panas %>%
   select(patient_id, gender, site, visit, pos_affect)
 
-cmpst_panas_neg <- cmpst_panas %>%
+data_panas_neg <- cmpst_panas %>%
   select(patient_id, gender, site, visit, neg_affect)
 ```
 
@@ -69,7 +69,7 @@ cmpst_panas_neg <- cmpst_panas %>%
 ```{r predictorchange}
 #calculate changes in negative affect
 
-cmpst_neg_affect_delta <- cmpst_panas_neg %>%
+data_neg_affect_delta <- data_panas_neg %>%
  pivot_wider(
    names_from = "visit",
    values_from = "neg_affect",
@@ -78,7 +78,7 @@ cmpst_neg_affect_delta <- cmpst_panas_neg %>%
   mutate(neg_affect_delta14 = Week14 - Baseline) %>%
   select(patient_id, neg_affect_delta3, neg_affect_delta14)
 
-cmpst_neg_affect_delta
+data_neg_affect_delta
 
 ```
 
@@ -87,10 +87,10 @@ Joining datasets
 
 ```{r jointdata}
 
-ham24tot_neg_affect =
-  left_join(cmpst_ham24tot_delta, cmpst_neg_affect_delta, by = "patient_id")
+data_ham24tot_neg_affect =
+  left_join(data_ham24tot_delta, data_neg_affect_delta, by = "patient_id")
 
-ham24tot_neg_affect
+data_ham24tot_neg_affect
 
 ```
 
@@ -100,13 +100,13 @@ Changes from Baseline to Week3 (NEG AFFECT)
 
 
 #plotting change in neg_affect against change in ham24tot
-ggplot(ham24tot_neg_affect, aes(neg_affect_delta3, ham24tot_delta3) ) + geom_point() + geom_smooth() + facet_grid(~site)
+ggplot(data_ham24tot_neg_affect, aes(neg_affect_delta3, ham24tot_delta3) ) + geom_point() + geom_smooth() + facet_grid(~site)
 
 
 #fitting the model
-fit = lm(ham24tot_delta3 ~ neg_affect_delta3, data = ham24tot_neg_affect)
+model_neg_affect_delta3 = lm(ham24tot_delta3 ~ neg_affect_delta3, data = data_ham24tot_neg_affect)
 
-fit %>%
+model_neg_affect %>%
   broom::tidy() %>%
   knitr::kable(digits =3)
 
@@ -120,11 +120,11 @@ Changes from Baseline to Week14 (NEG AFFECT)
 
 
 #plotting change in neg_affect against change in ham24tot
-ggplot(ham24tot_neg_affect, aes(neg_affect_delta14, ham24tot_delta14) ) + geom_point() + geom_smooth() + facet_grid(~site)
+ggplot(data_ham24tot_neg_affect, aes(neg_affect_delta14, ham24tot_delta14) ) + geom_point() + geom_smooth() + facet_grid(~site)
 
 
 #fitting the model
-fit = lm(ham24tot_delta14 ~ neg_affect_delta14, data = ham24tot_neg_affect)
+model_neg_affect_delta14 = lm(ham24tot_delta14 ~ neg_affect_delta14, data = data_ham24tot_neg_affect)
 
 fit %>%
   broom::tidy() %>%
@@ -141,7 +141,7 @@ fit %>%
 ```{r predictorchange}
 #calculate changes in positive affect
 
-cmpst_pos_affect_delta <- cmpst_panas_pos %>%
+data_pos_affect_delta <- data_panas_pos %>%
  pivot_wider(
    names_from = "visit",
    values_from = "pos_affect",
@@ -150,7 +150,7 @@ cmpst_pos_affect_delta <- cmpst_panas_pos %>%
   mutate(pos_affect_delta14 = Week14 - Baseline) %>%
   select(patient_id, pos_affect_delta3, pos_affect_delta14)
 
-cmpst_pos_affect_delta
+data_pos_affect_delta
 
 ```
 
@@ -159,10 +159,10 @@ Joining datasets
 
 ```{r jointdata}
 
-ham24tot_pos_affect =
+data_ham24tot_pos_affect =
   left_join(cmpst_ham24tot_delta, cmpst_pos_affect_delta, by = "patient_id")
 
-ham24tot_pos_affect
+data_ham24tot_pos_affect
 
 ```
 
@@ -172,13 +172,13 @@ Changes from Baseline to Week3 (POS AFFECT)
 
 
 #plotting change in neg_affect against change in ham24tot
-ggplot(ham24tot_pos_affect, aes(pos_affect_delta3, ham24tot_delta3) ) + geom_point() + geom_smooth() + facet_grid(~site)
+ggplot(data_ham24tot_pos_affect, aes(pos_affect_delta3, ham24tot_delta3) ) + geom_point() + geom_smooth() + facet_grid(~site)
 
 
 #fitting the model
-fit = lm(ham24tot_delta3 ~ pos_affect_delta3, data = ham24tot_pos_affect)
+model_pos_affect_delta3 = lm(ham24tot_delta3 ~ pos_affect_delta3, data = ham24tot_pos_affect)
 
-fit %>%
+model_pos_affect_delta3 %>%
   broom::tidy() %>%
   knitr::kable(digits =3)
 
@@ -195,13 +195,13 @@ Changes from Baseline to Week14 (POS AFFECT)
 
 
 #plotting change in neg_affect against change in ham24tot
-ggplot(ham24tot_pos_affect, aes(pos_affect_delta14, ham24tot_delta14) ) + geom_point() + geom_smooth() + facet_grid(~site)
+ggplot(data_ham24tot_pos_affect, aes(pos_affect_delta14, ham24tot_delta14) ) + geom_point() + geom_smooth() + facet_grid(~site)
 
 
 #fitting the model
-fit = lm(ham24tot_delta14 ~ pos_affect_delta14, data = ham24tot_pos_affect)
+model_pos_affect_delta14 = lm(ham24tot_delta14 ~ pos_affect_delta14, data = ham24tot_pos_affect)
 
-fit %>%
+model_pos_affect_delta14 %>%
   broom::tidy() %>%
   knitr::kable(digits =3)
 
@@ -215,10 +215,10 @@ Comment: inverse trend by site?
 MADRS
 
 ```{r data}
-cmpst_madrs <- cmpst_all %>%
+data_madrs <- cmpst_all %>%
   select(patient_id, gender, site, visit, madrs_total) 
 
-cmpst_madrs_delta <- cmpst_madrs %>%
+data_madrs_delta <- data_madrs %>%
  pivot_wider(
   names_from = "visit",
   values_from = "madrs_total",
@@ -227,7 +227,7 @@ mutate(madrs_delta3 = Week3 - Baseline) %>%
 mutate(madrs_delta14 = Week14 - Baseline) %>%
   select(patient_id, madrs_delta3, madrs_delta14)
 
-cmpst_madrs_delta
+data_madrs_delta
 
 ```
 
@@ -236,10 +236,10 @@ Joint data
 
 ```{r}
 
-ham24tot_madrs_data =
-  left_join(cmpst_ham24tot_delta, cmpst_madrs_delta, by = "patient_id")
+data_ham24tot_madrs =
+  left_join(data_ham24tot_delta, data_madrs_delta, by = "patient_id")
 
-ham24tot_madrs_data
+data_ham24tot_madrs
 
 ```
 
@@ -250,13 +250,33 @@ Changes from Baseline to Week3 (MADRS_TOT)
 
 
 #plotting change in MARDRS_TOT against change in ham24tot
-ggplot(ham24tot_madrs, aes(madrs_delta3, ham24tot_delta3) ) + geom_point() + geom_smooth() + facet_grid(~site)
+ggplot(data_ham24tot_madrs, aes(madrs_delta3, ham24tot_delta3) ) + geom_point() + geom_smooth() + facet_grid(~site)
 
 
 #fitting the model
-fit = lm(ham24tot_delta3 ~ madrs_delta3, data = ham24tot_madrs_data)
+model_madrs_detal3 = lm(ham24tot_delta3 ~ madrs_delta3, data = data_ham24tot_madrs)
 
-fit %>%
+model_madrs_detal3 %>%
+  broom::tidy() %>%
+  knitr::kable(digits =3)
+
+
+```
+
+
+Changes from Baseline to Week14 (MADRS_TOT)
+
+```{r linearmodelweek14}
+
+
+#plotting change in MARDRS_TOT against change in ham24tot
+ggplot(data_ham24tot_madrs, aes(madrs_delta14, ham24tot_delta14) ) + geom_point() + geom_smooth() + facet_grid(~site)
+
+
+#fitting the model
+model_madrs_detal14 = lm(ham24tot_delta14 ~ madrs_delta14, data = data_ham24tot_madrs)
+
+model_madrs_detal14 %>%
   broom::tidy() %>%
   knitr::kable(digits =3)
 
