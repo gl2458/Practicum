@@ -1,0 +1,682 @@
+---
+title: "table1week3"
+author: "Rachel Lee"
+date: "4/13/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r data}
+
+library(tidyverse)
+
+cmpst_all = read_csv(file = "/Users/rachellee/Google Drive/Practicum/Data/cmpst_all.csv") %>%
+ janitor::clean_names() %>%
+ mutate( visit = forcats::fct_relevel(visit, c("Screen", "Baseline", "Week3", "Week6", "Week9", "Week14", "Week24", "End of Treatment")))
+
+cmpst_all%>%
+  select(race) %>%
+  distinct()
+
+
+```
+
+Total number of patients
+```{r}
+
+cmpst_all%>%
+  select(patient_id)%>%
+  distinct() %>%
+  count()
+
+```
+
+Age
+
+```{r}
+cmpst_wide <- cmpst_all %>%
+  select(patient_id, gender, visit, site, tx_text, age, education, race, ham24tot) %>%
+  pivot_wider(
+    names_from = "visit" , 
+    values_from = "ham24tot" ,
+  ) 
+
+cmpst_wide
+
+cmpst_wide$age %>%
+  mean()
+
+# by treatment group
+
+cmpst_wide %>%
+  group_by(tx_text) %>%
+  summarize(
+    n(),
+    mean(age),
+    sd(age)
+  )
+
+```
+
+
+Race
+
+```{r}
+#N for race
+cmpst_wide <- cmpst_all %>%
+  select(patient_id, gender, visit, site, tx_text, age, education, race, ham24tot) %>%
+  pivot_wider(
+    names_from = "visit" , 
+    values_from = "ham24tot" ,
+  )
+
+#ALL
+cmpst_wide %>%
+  group_by (race)%>%
+  summarise(
+    n()
+  )
+
+#by treatment
+cmpst_wide %>%
+  group_by(tx_text, race) %>%
+  summarize(
+    n()
+  )
+
+```
+
+
+
+Gender
+
+```{r}
+cmpst_wide <- cmpst_all %>%
+  select(patient_id, gender, visit, site, tx_text, age, education, race, ham24tot) %>%
+  pivot_wider(
+    names_from = "visit" , 
+    values_from = "ham24tot" ,
+  ) 
+
+cmpst_wide
+
+
+#N for gender
+cmpst_wide %>%
+  group_by (gender, tx_text)%>%
+  count()
+
+
+```
+
+Site
+
+```{r}
+#N for site
+cmpst_wide %>%
+  group_by (site)%>%
+  summarise(
+    n()
+  )
+
+cmpst_wide %>%
+  group_by (site, tx_text)%>%
+  summarise(
+    n()
+  )
+```
+
+
+MADRS
+
+```{r}
+cmpst_wide <- cmpst_all %>%
+  select(patient_id, gender, visit, site, tx_text, age, education, race, madrs_total) %>%
+  pivot_wider(
+    names_from = "visit" , 
+    values_from = "madrs_total" ,
+  )
+
+cmpst_wide
+
+#total N at timepoint
+cmpst_wide %>%
+  select(Week3) %>%
+ drop_na() %>%
+ summarise(
+   n(),
+   mean = mean(Week3),
+   sd = sd(Week3)
+ )
+
+#n missing
+cmpst_wide%>%
+  select(Week3) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+
+#N, mean, sd at timepoint by treatment group
+cmpst_wide %>%
+  group_by(tx_text) %>%
+  select(patient_id, tx_text, Week3) %>%
+  drop_na() %>%
+ summarise(
+   n(),
+   mean = mean(Week3),
+   sd = sd(Week3)
+ )
+
+#n missing
+cmpst_wide%>%
+  group_by(tx_text) %>%
+  select(Week3) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+
+```
+
+
+HAM24TOT
+
+```{r}
+
+cmpst_wide <- cmpst_all %>%
+  select(patient_id, gender, visit, site, tx_text, age, education, race, ham24tot) %>%
+  pivot_wider(
+    names_from = "visit" , 
+    values_from = "ham24tot" ,
+  )
+
+cmpst_wide
+
+#total N at timepoint
+cmpst_wide %>%
+  select(Week3) %>%
+  drop_na() %>%
+ summarise(
+   n(),
+   mean = mean(Week3),
+   sd = sd(Week3)
+ )
+#n missing
+cmpst_wide%>%
+  select(Week3) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+
+#N, mean, sd at timepoint by treatment group
+cmpst_wide %>%
+  group_by(tx_text) %>%
+  select(patient_id, tx_text, Week3) %>%
+  drop_na() %>%
+ summarise(
+   n(),
+   mean = mean(Week3),
+   sd = sd(Week3)
+ )
+
+#n missing
+cmpst_wide%>%
+  group_by(tx_text) %>%
+  select(Week3) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+
+```
+
+
+POS_AFFECT
+
+```{r}
+
+cmpst_wide <- cmpst_all %>%
+  select(patient_id, gender, visit, site, tx_text, age, education, race, pos_affect) %>%
+  pivot_wider(
+    names_from = "visit" , 
+    values_from = "pos_affect" ,
+  )
+
+cmpst_wide
+
+#total N at timepoint
+cmpst_wide %>%
+  select(Week3) %>%
+  drop_na() %>%
+ summarise(
+   n(),
+   mean = mean(Week3),
+   sd = sd(Week3)
+ )
+
+#n missing
+cmpst_wide%>%
+  select(Week3) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+
+#N, mean, sd at timepoint by treatment group
+cmpst_wide %>%
+  group_by(tx_text) %>%
+  select(patient_id, tx_text, Week3) %>%
+  drop_na() %>%
+ summarise(
+   n(),
+   mean = mean(Week3),
+   sd = sd(Week3)
+ )
+
+#n missing
+cmpst_wide%>%
+  group_by(tx_text) %>%
+  select(Week3) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+
+```
+
+
+
+
+NEG_AFFECT
+
+```{r}
+cmpst_wide <- cmpst_all %>%
+  select(patient_id, gender, visit, site, tx_text, age, education, race, neg_affect) %>%
+  pivot_wider(
+    names_from = "visit" , 
+    values_from = "neg_affect" ,
+  )
+
+cmpst_wide
+
+#total N at timepoint
+cmpst_wide %>%
+  select(Week3) %>%
+  drop_na() %>%
+ summarise(
+   n(),
+   mean = mean(Week3),
+   sd = sd(Week3)
+ )
+
+#n missing
+cmpst_wide%>%
+  select(Week3) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+
+#N, mean, sd at timepoint by treatment group
+cmpst_wide %>%
+  group_by(tx_text) %>%
+  select(patient_id, tx_text, Week3) %>%
+  drop_na() %>%
+ summarise(
+   n(),
+   mean = mean(Week3),
+   sd = sd(Week3)
+ )
+
+#n missing by group
+cmpst_wide%>%
+  group_by(tx_text) %>%
+  select(Week3) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+
+```
+
+
+
+DSSI_SI
+
+```{r}
+
+cmpst_wide <- cmpst_all %>%
+  select(patient_id, gender, visit, site, tx_text, age, education, race, dssi_si) %>%
+  pivot_wider(
+    names_from = "visit" , 
+    values_from = "dssi_si" ,
+  )
+
+cmpst_wide
+
+#total N at timepoint
+cmpst_wide %>%
+  select(Week3) %>%
+  drop_na() %>%
+ summarise(
+   n(),
+   mean = mean(Week3),
+   sd = sd(Week3)
+ )
+
+#n missing
+cmpst_wide%>%
+  select(Week3) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+
+#N, mean, sd at timepoint by treatment group
+cmpst_wide %>%
+  group_by(tx_text) %>%
+  select(patient_id, tx_text, Week3) %>%
+  drop_na() %>%
+ summarise(
+   n(),
+   mean = mean(Week3),
+   sd = sd(Week3)
+ )
+
+#n missing by group
+cmpst_wide%>%
+  group_by(tx_text) %>%
+  select(Week3) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+
+
+```
+
+
+
+DSSI_SS
+```{r}
+
+cmpst_wide <- cmpst_all %>%
+  select(patient_id, gender, visit, site, tx_text, age, education, race, dssi_ss) %>%
+  pivot_wider(
+    names_from = "visit" , 
+    values_from = "dssi_ss" ,
+  )
+
+cmpst_wide
+
+#total N at timepoint
+cmpst_wide %>%
+  select(Week3) %>%
+  drop_na() %>%
+ summarise(
+   n(),
+   mean = mean(Week3),
+   sd = sd(Week3)
+ )
+
+#n missing
+cmpst_wide%>%
+  select(Week3) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+
+#N, mean, sd at timepoint by treatment group
+cmpst_wide %>%
+  group_by(tx_text) %>%
+  select(patient_id, tx_text, Week3) %>%
+  drop_na() %>%
+ summarise(
+   n(),
+   mean = mean(Week3),
+   sd = sd(Week3)
+ )
+
+#n missing by group
+cmpst_wide%>%
+  group_by(tx_text) %>%
+  select(Week3) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+
+
+```
+
+
+DSSI_IS
+```{r}
+
+cmpst_wide <- cmpst_all %>%
+  select(patient_id, gender, visit, site, tx_text, age, education, race, dssi_is) %>%
+  pivot_wider(
+    names_from = "visit" , 
+    values_from = "dssi_is" ,
+  )
+
+cmpst_wide
+
+#total N at timepoint
+cmpst_wide %>%
+  select(Week3) %>%
+  drop_na() %>%
+ summarise(
+   n(),
+   mean = mean(Week3),
+   sd = sd(Week3)
+ )
+#n missing
+cmpst_wide%>%
+  select(Week3) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+
+#N, mean, sd at timepoint by treatment group
+cmpst_wide %>%
+  group_by(tx_text) %>%
+  select(patient_id, tx_text, Week3) %>%
+  drop_na() %>%
+ summarise(
+   n(),
+   mean = mean(Week3),
+   sd = sd(Week3)
+ )
+
+#n missing by group
+cmpst_wide%>%
+  group_by(tx_text) %>%
+  select(Week3) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+
+
+```
+
+
+DSSI_NET
+```{r}
+
+cmpst_wide <- cmpst_all %>%
+  select(patient_id, gender, visit, site, tx_text, age, education, race, dssi_net) %>%
+  pivot_wider(
+    names_from = "visit" , 
+    values_from = "dssi_net" ,
+  )
+
+cmpst_wide
+
+#total N at timepoint
+cmpst_wide %>%
+  select(Week3) %>%
+  drop_na() %>%
+ summarise(
+   n(),
+   mean = mean(Week3),
+   sd = sd(Week3)
+ )
+
+#n missing
+cmpst_wide%>%
+  select(Week3) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+
+#N, mean, sd at timepoint by treatment group
+cmpst_wide %>%
+  group_by(tx_text) %>%
+  select(patient_id, tx_text, Week3) %>%
+  drop_na() %>%
+ summarise(
+   n(),
+   mean = mean(Week3),
+   sd = sd(Week3)
+ )
+
+#n missing by group
+cmpst_wide%>%
+  group_by(tx_text) %>%
+  select(Week3) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+
+```
+
+
+HVLT_IMMED
+```{r}
+
+cmpst_wide <- cmpst_all %>%
+  select(patient_id, gender, visit, site, tx_text, age, education, race, hvlt_immed) %>%
+  pivot_wider(
+    names_from = "visit" , 
+    values_from = "hvlt_immed" ,
+  )
+
+cmpst_wide
+
+#total N at timepoint
+cmpst_wide %>%
+  select(Week3) %>%
+  drop_na() %>%
+ summarise(
+   n(),
+   mean = mean(Week3),
+   sd = sd(Week3)
+ )
+
+#n missing
+cmpst_wide%>%
+  select(Week3) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+
+#N, mean, sd at timepoint by treatment group
+cmpst_wide %>%
+  group_by(tx_text) %>%
+  select(patient_id, tx_text, Week3) %>%
+  drop_na() %>%
+ summarise(
+   n(),
+   mean = mean(Week3),
+   sd = sd(Week3)
+ )
+
+#n missing by group
+cmpst_wide%>%
+  group_by(tx_text) %>%
+  select(Week3) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+
+```
+
+
+
+HVLT_DISCRIM
+```{r}
+
+cmpst_wide <- cmpst_all %>%
+  select(patient_id, gender, visit, site, tx_text, age, education, race, hvlt_discrim) %>%
+  pivot_wider(
+    names_from = "visit" , 
+    values_from = "hvlt_discrim" ,
+  )
+
+cmpst_wide
+
+#total N at timepoint
+cmpst_wide %>%
+  select(Week3) %>%
+  drop_na() %>%
+ summarise(
+   n(),
+   mean = mean(Week3),
+   sd = sd(Week3)
+ )
+
+#n missing
+cmpst_wide%>%
+  select(Week3) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+
+#N, mean, sd at timepoint by treatment group
+cmpst_wide %>%
+  group_by(tx_text) %>%
+  select(patient_id, tx_text, Week3) %>%
+  drop_na() %>%
+ summarise(
+   n(),
+   mean = mean(Week3),
+   sd = sd(Week3)
+ )
+
+#n missing by group
+cmpst_wide%>%
+  group_by(tx_text) %>%
+  select(Week3) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+
+```
+
+
+TRS
+
+```{r}
+
+cmpst_wide <- cmpst_all %>%
+  select(patient_id, gender, visit, site, tx_text, age, education, race, trs_total) %>%
+  pivot_wider(
+    names_from = "visit" , 
+    values_from = "trs_total" ,
+  )
+
+cmpst_wide
+
+#total N at timepoint
+cmpst_wide %>%
+  select(Week3) %>%
+  drop_na() %>%
+ summarise(
+   n(),
+   mean = mean(Week3),
+   sd = sd(Week3)
+ )
+
+#n missing
+cmpst_wide%>%
+  select(Week3) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+
+#N, mean, sd at timepoint by treatment group
+cmpst_wide %>%
+  group_by(tx_text) %>%
+  select(patient_id, tx_text, Week3) %>%
+  drop_na() %>%
+ summarise(
+   n(),
+   mean = mean(Week3),
+   sd = sd(Week3)
+ )
+
+#n missing by group
+cmpst_wide%>%
+  group_by(tx_text) %>%
+  select(Week3) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+
+```
+
+
+
