@@ -144,35 +144,35 @@ cmpst_wide
 
 #total N at timepoint
 cmpst_wide %>%
-  select(Week14) %>%
+  select(Week24) %>%
  drop_na() %>%
  summarise(
    n(),
-   mean = mean(Week14),
-   sd = sd(Week14)
+   mean = mean(Week24),
+   sd = sd(Week24)
  )
 
 #n missing
 cmpst_wide%>%
-  select(Week14) %>%
+  select(Week24) %>%
   summarise_all(funs(sum(is.na(.))))
 
 
 #N, mean, sd at timepoint by treatment group
 cmpst_wide %>%
   group_by(tx_text) %>%
-  select(patient_id, tx_text, Week14) %>%
+  select(patient_id, tx_text, Week24) %>%
   drop_na() %>%
  summarise(
    n(),
-   mean = mean(Week14),
-   sd = sd(Week14)
+   mean = mean(Week24),
+   sd = sd(Week24)
  )
 
 #n missing
 cmpst_wide%>%
   group_by(tx_text) %>%
-  select(Week14) %>%
+  select(Week24) %>%
   summarise_all(funs(sum(is.na(.))))
 
 
@@ -194,34 +194,34 @@ cmpst_wide
 
 #total N at timepoint
 cmpst_wide %>%
-  select(Week14) %>%
+  select(Week24) %>%
   drop_na() %>%
  summarise(
    n(),
-   mean = mean(Week14),
-   sd = sd(Week14)
+   mean = mean(Week24),
+   sd = sd(Week24)
  )
 #n missing
 cmpst_wide%>%
-  select(Week14) %>%
+  select(Week24) %>%
   summarise_all(funs(sum(is.na(.))))
 
 
 #N, mean, sd at timepoint by treatment group
 cmpst_wide %>%
   group_by(tx_text) %>%
-  select(patient_id, tx_text, Week14) %>%
+  select(patient_id, tx_text, Week24) %>%
   drop_na() %>%
  summarise(
    n(),
-   mean = mean(Week14),
-   sd = sd(Week14)
+   mean = mean(Week24),
+   sd = sd(Week24)
  )
 
 #n missing
 cmpst_wide%>%
   group_by(tx_text) %>%
-  select(Week14) %>%
+  select(Week24) %>%
   summarise_all(funs(sum(is.na(.))))
 
 
@@ -243,35 +243,35 @@ cmpst_wide
 
 #total N at timepoint
 cmpst_wide %>%
-  select(Week14) %>%
+  select(Week24) %>%
   drop_na() %>%
  summarise(
    n(),
-   mean = mean(Week14),
-   sd = sd(Week14)
+   mean = mean(Week24),
+   sd = sd(Week24)
  )
 
 #n missing
 cmpst_wide%>%
-  select(Week14) %>%
+  select(Week24) %>%
   summarise_all(funs(sum(is.na(.))))
 
 
 #N, mean, sd at timepoint by treatment group
 cmpst_wide %>%
   group_by(tx_text) %>%
-  select(patient_id, tx_text, Week14) %>%
+  select(patient_id, tx_text, Week24) %>%
   drop_na() %>%
  summarise(
    n(),
-   mean = mean(Week14),
-   sd = sd(Week14)
+   mean = mean(Week24),
+   sd = sd(Week24)
  )
 
 #n missing
 cmpst_wide%>%
   group_by(tx_text) %>%
-  select(Week14) %>%
+  select(Week24) %>%
   summarise_all(funs(sum(is.na(.))))
 
 
@@ -294,35 +294,35 @@ cmpst_wide
 
 #total N at timepoint
 cmpst_wide %>%
-  select(Week14) %>%
+  select(Week24) %>%
   drop_na() %>%
  summarise(
    n(),
-   mean = mean(Week14),
-   sd = sd(Week14)
+   mean = mean(Week24),
+   sd = sd(Week24)
  )
 
 #n missing
 cmpst_wide%>%
-  select(Week14) %>%
+  select(Week24) %>%
   summarise_all(funs(sum(is.na(.))))
 
 
 #N, mean, sd at timepoint by treatment group
 cmpst_wide %>%
   group_by(tx_text) %>%
-  select(patient_id, tx_text, Week14) %>%
+  select(patient_id, tx_text, Week24) %>%
   drop_na() %>%
  summarise(
    n(),
-   mean = mean(Week14),
-   sd = sd(Week14)
+   mean = mean(Week24),
+   sd = sd(Week24)
  )
 
 #n missing by group
 cmpst_wide%>%
   group_by(tx_text) %>%
-  select(Week14) %>%
+  select(Week24) %>%
   summarise_all(funs(sum(is.na(.))))
 
 
@@ -345,35 +345,35 @@ cmpst_wide
 
 #total N at timepoint
 cmpst_wide %>%
-  select(Week14) %>%
+  select(Week24) %>%
   drop_na() %>%
  summarise(
    n(),
-   mean = mean(Week14),
-   sd = sd(Week14)
+   mean = mean(Week24),
+   sd = sd(Week24)
  )
 
 #n missing
 cmpst_wide%>%
-  select(Week14) %>%
+  select(Week24) %>%
   summarise_all(funs(sum(is.na(.))))
 
 
 #N, mean, sd at timepoint by treatment group
 cmpst_wide %>%
   group_by(tx_text) %>%
-  select(patient_id, tx_text, Week14) %>%
+  select(patient_id, tx_text, Week24) %>%
   drop_na() %>%
  summarise(
    n(),
-   mean = mean(Week14),
-   sd = sd(Week14)
+   mean = mean(Week24),
+   sd = sd(Week24)
  )
 
 #n missing by group
 cmpst_wide%>%
   group_by(tx_text) %>%
-  select(Week14) %>%
+  select(Week24) %>%
   summarise_all(funs(sum(is.na(.))))
 
 
@@ -396,35 +396,35 @@ cmpst_wide
 
 #total N at timepoint
 cmpst_wide %>%
-  select(Week14) %>%
+  select(Week24) %>%
   drop_na() %>%
  summarise(
    n(),
-   mean = mean(Week14),
-   sd = sd(Week14)
+   mean = mean(Week24),
+   sd = sd(Week24)
  )
 
 #n missing
 cmpst_wide%>%
-  select(Week14) %>%
+  select(Week24) %>%
   summarise_all(funs(sum(is.na(.))))
 
 
 #N, mean, sd at timepoint by treatment group
 cmpst_wide %>%
   group_by(tx_text) %>%
-  select(patient_id, tx_text, Week14) %>%
+  select(patient_id, tx_text, Week24) %>%
   drop_na() %>%
  summarise(
    n(),
-   mean = mean(Week14),
-   sd = sd(Week14)
+   mean = mean(Week24),
+   sd = sd(Week24)
  )
 
 #n missing by group
 cmpst_wide%>%
   group_by(tx_text) %>%
-  select(Week14) %>%
+  select(Week24) %>%
   summarise_all(funs(sum(is.na(.))))
 
 
@@ -446,34 +446,34 @@ cmpst_wide
 
 #total N at timepoint
 cmpst_wide %>%
-  select(Week14) %>%
+  select(Week24) %>%
   drop_na() %>%
  summarise(
    n(),
-   mean = mean(Week14),
-   sd = sd(Week14)
+   mean = mean(Week24),
+   sd = sd(Week24)
  )
 #n missing
 cmpst_wide%>%
-  select(Week14) %>%
+  select(Week24) %>%
   summarise_all(funs(sum(is.na(.))))
 
 
 #N, mean, sd at timepoint by treatment group
 cmpst_wide %>%
   group_by(tx_text) %>%
-  select(patient_id, tx_text, Week14) %>%
+  select(patient_id, tx_text, Week24) %>%
   drop_na() %>%
  summarise(
    n(),
-   mean = mean(Week14),
-   sd = sd(Week14)
+   mean = mean(Week24),
+   sd = sd(Week24)
  )
 
 #n missing by group
 cmpst_wide%>%
   group_by(tx_text) %>%
-  select(Week14) %>%
+  select(Week24) %>%
   summarise_all(funs(sum(is.na(.))))
 
 
@@ -495,35 +495,35 @@ cmpst_wide
 
 #total N at timepoint
 cmpst_wide %>%
-  select(Week14) %>%
+  select(Week24) %>%
   drop_na() %>%
  summarise(
    n(),
-   mean = mean(Week14),
-   sd = sd(Week14)
+   mean = mean(Week24),
+   sd = sd(Week24)
  )
 
 #n missing
 cmpst_wide%>%
-  select(Week14) %>%
+  select(Week24) %>%
   summarise_all(funs(sum(is.na(.))))
 
 
 #N, mean, sd at timepoint by treatment group
 cmpst_wide %>%
   group_by(tx_text) %>%
-  select(patient_id, tx_text, Week14) %>%
+  select(patient_id, tx_text, Week24) %>%
   drop_na() %>%
  summarise(
    n(),
-   mean = mean(Week14),
-   sd = sd(Week14)
+   mean = mean(Week24),
+   sd = sd(Week24)
  )
 
 #n missing by group
 cmpst_wide%>%
   group_by(tx_text) %>%
-  select(Week14) %>%
+  select(Week24) %>%
   summarise_all(funs(sum(is.na(.))))
 
 
@@ -544,35 +544,35 @@ cmpst_wide
 
 #total N at timepoint
 cmpst_wide %>%
-  select(Week14) %>%
+  select(Week24) %>%
   drop_na() %>%
  summarise(
    n(),
-   mean = mean(Week14),
-   sd = sd(Week14)
+   mean = mean(Week24),
+   sd = sd(Week24)
  )
 
 #n missing
 cmpst_wide%>%
-  select(Week14) %>%
+  select(Week24) %>%
   summarise_all(funs(sum(is.na(.))))
 
 
 #N, mean, sd at timepoint by treatment group
 cmpst_wide %>%
   group_by(tx_text) %>%
-  select(patient_id, tx_text, Week14) %>%
+  select(patient_id, tx_text, Week24) %>%
   drop_na() %>%
  summarise(
    n(),
-   mean = mean(Week14),
-   sd = sd(Week14)
+   mean = mean(Week24),
+   sd = sd(Week24)
  )
 
 #n missing by group
 cmpst_wide%>%
   group_by(tx_text) %>%
-  select(Week14) %>%
+  select(Week24) %>%
   summarise_all(funs(sum(is.na(.))))
 
 
@@ -594,35 +594,35 @@ cmpst_wide
 
 #total N at timepoint
 cmpst_wide %>%
-  select(Week14) %>%
+  select(Week24) %>%
   drop_na() %>%
  summarise(
    n(),
-   mean = mean(Week14),
-   sd = sd(Week14)
+   mean = mean(Week24),
+   sd = sd(Week24)
  )
 
 #n missing
 cmpst_wide%>%
-  select(Week14) %>%
+  select(Week24) %>%
   summarise_all(funs(sum(is.na(.))))
 
 
 #N, mean, sd at timepoint by treatment group
 cmpst_wide %>%
   group_by(tx_text) %>%
-  select(patient_id, tx_text, Week14) %>%
+  select(patient_id, tx_text, Week24) %>%
   drop_na() %>%
  summarise(
    n(),
-   mean = mean(Week14),
-   sd = sd(Week14)
+   mean = mean(Week24),
+   sd = sd(Week24)
  )
 
 #n missing by group
 cmpst_wide%>%
   group_by(tx_text) %>%
-  select(Week14) %>%
+  select(Week24) %>%
   summarise_all(funs(sum(is.na(.))))
 
 
@@ -644,35 +644,35 @@ cmpst_wide
 
 #total N at timepoint
 cmpst_wide %>%
-  select(Week14) %>%
+  select(Week24) %>%
   drop_na() %>%
  summarise(
    n(),
-   mean = mean(Week14),
-   sd = sd(Week14)
+   mean = mean(Week24),
+   sd = sd(Week24)
  )
 
 #n missing
 cmpst_wide%>%
-  select(Week14) %>%
+  select(Week24) %>%
   summarise_all(funs(sum(is.na(.))))
 
 
 #N, mean, sd at timepoint by treatment group
 cmpst_wide %>%
   group_by(tx_text) %>%
-  select(patient_id, tx_text, Week14) %>%
+  select(patient_id, tx_text, Week24) %>%
   drop_na() %>%
  summarise(
    n(),
-   mean = mean(Week14),
-   sd = sd(Week14)
+   mean = mean(Week24),
+   sd = sd(Week24)
  )
 
 #n missing by group
 cmpst_wide%>%
   group_by(tx_text) %>%
-  select(Week14) %>%
+  select(Week24) %>%
   summarise_all(funs(sum(is.na(.))))
 
 
