@@ -27,21 +27,15 @@ cmpst_all_2 = read_excel("/Users/rachellee/Google Drive/Practicum/Data/CMPSTBase
   col_types = NULL ) %>%
   janitor::clean_names() 
 
+#combine two datasets and rename "mms_etot" to "mmse_tot"
 cmpst_tot = 
   full_join(cmpst_all, cmpst_all_2, by = "sub_id") %>%
-  rename()
+  rename(mmse_tot = mms_etot )
 
 cmpst_tot
 
 
 ```
-
-
-
-
-
-
-
 
 
 
@@ -66,7 +60,8 @@ plot_longitudinal <- function(x_arg , y ) {
   dssi_net <- cmpst_all$dssi_net
   gender <- cmpst_all$gender
   
-    print( ggplot(cmpst_all, aes(visit, y)) + geom_point(size = 0.1) + theme(axis.text.x = element_text(size=3), axis.text.y = element_text(size=3), strip.text = element_text(size=3)) +
+  
+    print( ggplot(cmpst_tot, aes(visit, y)) + geom_point(size = 0.1) + theme(axis.text.x = element_text(size=3), axis.text.y = element_text(size=3), strip.text = element_text(size=3)) +
     theme(
   strip.background = element_blank()) +
     facet_wrap(~patient_id, nrow = 10, ncol = 18) +
