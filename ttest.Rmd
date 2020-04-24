@@ -33,7 +33,62 @@ cmpst_tot =
   rename(mmse_tot = mms_etot) %>%
   janitor::clean_names()
 
+cmpst_tot <- cmpst_tot %>%
+  select(patient_id, tx_text_x, site_x, visit_x, gender_x, age_x, education_x, race_x, (ham24tot_x:stroop_color_word_x), (drs_ip:mmse_tot)) %>%
+  rename( tx_text = tx_text_x, site = site_x, visit = visit_x, gender = gender_x, age = age_x, education = education_x, race = race_x, stroop_color_word = stroop_color_word_x, ham24tot = ham24tot_x)
+
 cmpst_tot
+
+###EXPORTING EXCEL 
+write.csv(cmpst_tot,"/Users/rachellee/Google Drive/Practicum/Data/cmpst_tot.csv", row.names = FALSE)
+
+```
+
+
+Baseline t.test 
+
+```{r t.test}
+
+#data sets
+cmpst_tot_base <- cmpst_tot %>%
+  filter(visit == "Baseline")
+
+cmpst_tot_wk3 <- cmpst_tot %>%
+  filter(visit == "Week3")
+
+cmpst_tot_wk14 <- cmpst_tot %>%
+  filter(visit == "Week14")
+
+cmpst_tot_wk24 <- cmpst_tot %>%
+  filter(visit == "Week24")
+
+
+#p-value calculation 
+
+pvalue_base = function(y) {
+
+  pos_affect <- cmpst_tot_base$pos_affect
+  neg_affect <- cmpst_tot_base$neg_affect
+  ham24tot <- cmpst_tot_base$ham24tot
+  madrs_total <- cmpst_tot_base$madrs_total
+  visit <- cmpst_tot_base$visit
+  hvlt_immed <- cmpst_tot_base$hvlt_immed
+  hvlt_discrim <- cmpst_tot_base$hvlt_discrim
+  trs_total <- cmpst_tot_base$trs_total
+  dssi_si <- cmpst_tot_base$dssi_si
+  dssi_ss <- cmpst_tot_base$dssi_ss
+  dssi_is <- cmpst_tot_base$dssi_is
+  dssi_net <- cmpst_tot_base$dssi_net
+  gender <- cmpst_tot_base$gender
+  mmse_tot <- cmpst_tot_base$mmse_tot
+  age <- cmpst_tot_base$age
+
+  t.test(y ~ tx_text, cmpst_tot_base)
+}
+
+pvalue_base(madrs_total)
+  
+
 
 ```
 
