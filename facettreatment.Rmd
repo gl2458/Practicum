@@ -29,8 +29,9 @@ cmpst_all_2 = read_excel("/Users/rachellee/Google Drive/Practicum/Data/CMPSTBase
 
 #combine two datasets and rename "mms_etot" to "mmse_tot"
 cmpst_tot = 
-  full_join(cmpst_all, cmpst_all_2, by = "sub_id") %>%
-  rename(mmse_tot = mms_etot )
+  left_join(cmpst_all, cmpst_all_2, by = "sub_id", no.dups = TRUE) %>%
+  rename(mmse_tot = mms_etot) %>%
+  janitor::clean_names()
 
 cmpst_tot
 
@@ -59,18 +60,19 @@ plot_longitudinal <- function(x_arg , y ) {
   dssi_is <- cmpst_all$dssi_is
   dssi_net <- cmpst_all$dssi_net
   gender <- cmpst_all$gender
+  mmse_tot <- cmpst_tot$mmse_tot
   
   
     print( ggplot(cmpst_tot, aes(visit, y)) + geom_point(size = 0.1) + theme(axis.text.x = element_text(size=3), axis.text.y = element_text(size=3), strip.text = element_text(size=3)) +
     theme(
   strip.background = element_blank()) +
-    facet_wrap(~patient_id, nrow = 10, ncol = 18) +
+    facet_wrap(~sub_id, nrow = 10, ncol = 18) +
     theme(panel.spacing = unit(0.2, "lines")) +
     theme(panel.background = element_rect(fill = "white", colour = "grey50"))
   )
 }
 
-plot_longitudinal(patient_id, pos_affect)
+plot_longitudinal(sub_id, )
 
 
 ```
@@ -95,6 +97,7 @@ plot_longitudinal <- function(x, y) {
   dssi_net <- cmpst_all$dssi_net
   gender <- cmpst_all$gender
   tx_text <- cmpst_all$tx_text
+  mmse_tot <- cmpst_tot$mmse_tot
 
     print(
       ggplot(cmpst_all, aes(visit, x, group = patient_id)) + geom_point(size = 0.5) + geom_line() + facet_grid(y)
@@ -170,5 +173,22 @@ dssi_net
 plot_longitudinal(dssi_net, ~tx_text) + theme(axis.text.x = black_7_text) 
 
 ```
+
+
+select MMSE 
+
+```{r}
+
+cmpst_mmse <- cmpst_tot %>%
+  select(sub_id, tx_text_x, visit_x, gender_x, ham24tot_x, mmse_tot) %>%
+  filter(visit_x == "Baseline")
+
+cmpst_mmse
+
+ggplot(cmpst_mmse, aes(x = mmse_tot, y = ham24tot_x )) + geom_point() + facet_grid(~tx_text_x)
+
+```
+
+
 
 
