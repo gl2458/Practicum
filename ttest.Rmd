@@ -105,34 +105,101 @@ Week3 t.test
 
 #p-value calculation 
 
-pvalue_base = function(y) {
+pvalue_wk3 = function(y) {
 
-  pos_affect <- cmpst_tot_base$pos_affect
-  neg_affect <- cmpst_tot_base$neg_affect
-  ham24tot <- cmpst_tot_base$ham24tot
-  madrs_total <- cmpst_tot_base$madrs_total
-  visit <- cmpst_tot_base$visit
-  hvlt_immed <- cmpst_tot_base$hvlt_immed
-  hvlt_discrim <- cmpst_tot_base$hvlt_discrim
-  trs_total <- cmpst_tot_base$trs_total
-  dssi_si <- cmpst_tot_base$dssi_si
-  dssi_ss <- cmpst_tot_base$dssi_ss
-  dssi_is <- cmpst_tot_base$dssi_is
-  dssi_net <- cmpst_tot_base$dssi_net
-  gender <- cmpst_tot_base$gender
-  mmse_tot <- cmpst_tot_base$mmse_tot
-  age <- cmpst_tot_base$age
-  stroop_word <- cmpst_tot_base$stroop_word
-  stroop_color <- cmpst_tot_base$stroop_color
-  stroop_color_word <- cmpst_tot_base$stroop_color_word
+  pos_affect <- cmpst_tot_wk3$pos_affect
+  neg_affect <- cmpst_tot_wk3$neg_affect
+  ham24tot <- cmpst_tot_wk3$ham24tot
+  madrs_total <- cmpst_tot_wk3$madrs_total
+  visit <- cmpst_tot_wk3$visit
+  hvlt_immed <- cmpst_tot_wk3$hvlt_immed
+  hvlt_discrim <- cmpst_tot_wk3$hvlt_discrim
+  trs_total <- cmpst_tot_wk3$trs_total
+  dssi_si <- cmpst_tot_wk3$dssi_si
+  dssi_ss <- cmpst_tot_wk3$dssi_ss
+  dssi_is <- cmpst_tot_wk3$dssi_is
+  dssi_net <- cmpst_tot_wk3$dssi_net
+  gender <- cmpst_tot_wk3$gender
+  mmse_tot <- cmpst_tot_wk3$mmse_tot
+  age <- cmpst_tot_wk3$age
+  stroop_word <- cmpst_tot_wk3$stroop_word
+  stroop_color <- cmpst_tot_wk3$stroop_color
+  stroop_color_word <- cmpst_tot_wk3$stroop_color_word
 
 
-  t.test(y ~ tx_text, cmpst_tot_base)
+  t.test(y ~ tx_text, cmpst_tot_wk3)
 }
 
-pvalue_base(stroop_color_word)
+pvalue_wk3(trs_total)
   
 
+```
 
+
+Week 14 t.test
+
+```{r}
+
+#p-value calculation 
+
+pvalue_wk14 = function(y) {
+
+  pos_affect <- cmpst_tot_wk14$pos_affect
+  neg_affect <- cmpst_tot_wk14$neg_affect
+  ham24tot <- cmpst_tot_wk14$ham24tot
+  madrs_total <- cmpst_tot_wk14$madrs_total
+  visit <- cmpst_tot_wk14$visit
+  hvlt_immed <- cmpst_tot_wk14$hvlt_immed
+  hvlt_discrim <- cmpst_tot_wk14$hvlt_discrim
+  trs_total <- cmpst_tot_wk14$trs_total
+  dssi_si <- cmpst_tot_wk14$dssi_si
+  dssi_ss <- cmpst_tot_wk14$dssi_ss
+  dssi_is <- cmpst_tot_wk14$dssi_is
+  dssi_net <- cmpst_tot_wk14$dssi_net
+  gender <- cmpst_tot_wk14$gender
+  mmse_tot <- cmpst_tot_wk14$mmse_tot
+  age <- cmpst_tot_wk14$age
+  stroop_word <- cmpst_tot_wk14$stroop_word
+  stroop_color <- cmpst_tot_wk14$stroop_color
+  stroop_color_word <- cmpst_tot_wk14$stroop_color_word
+
+
+  t.test(y ~ tx_text, cmpst_tot_wk14)
+}
+
+pvalue_wk14(trs_total)
+  
+```
+
+
+Week 24 t.test
+
+```{r}
+
+#p-value calculation 
+
+pvalue_wk24 = function(y) {
+
+  pos_affect <- cmpst_tot_wk24$pos_affect
+  neg_affect <- cmpst_tot_wk24$neg_affect
+  ham24tot <- cmpst_tot_wk24$ham24tot
+  madrs_total <- cmpst_tot_wk24$madrs_total
+  visit <- cmpst_tot_wk24$visit
+  hvlt_immed <- cmpst_tot_wk24$hvlt_immed
+  hvlt_discrim <- cmpst_tot_wk24$hvlt_discrim
+  trs_total <- cmpst_tot_wk24$trs_total
+  dssi_si <- cmpst_tot_wk24$dssi_si
+  dssi_ss <- cmpst_tot_wk24$dssi_ss
+  dssi_is <- cmpst_tot_wk24$dssi_is
+  dssi_net <- cmpst_tot_wk24$dssi_net
+  gender <- cmpst_tot_wk24$gender
+  mmse_tot <- cmpst_tot_wk24$mmse_tot
+  age <- cmpst_tot_wk24$age
+
+  t.test(y ~ tx_text, cmpst_tot_wk24)
+}
+
+pvalue_wk24(hvlt_discrim)
+  
 ```
 
