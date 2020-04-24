@@ -4,12 +4,12 @@ author: "Rachel Lee"
 date: "4/22/2020"
 output: html_document
 ---
-
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = TRUE)
 install.packages("readxl")
 
 ```
+
 
 
 ```{r dataimport}
@@ -63,7 +63,7 @@ plot_longitudinal <- function(x_arg , y ) {
   mmse_tot <- cmpst_tot$mmse_tot
   
   
-    print( ggplot(cmpst_tot, aes(visit, y)) + geom_point(size = 0.1) + theme(axis.text.x = element_text(size=3), axis.text.y = element_text(size=3), strip.text = element_text(size=3)) +
+    print( ggplot(cmpst_tot, aes(visit, y)) + geom_point(size = 0.5) + theme(axis.text.x = element_text(size=3), axis.text.y = element_text(size=3), strip.text = element_text(size=3)) +
     theme(
   strip.background = element_blank()) +
     facet_wrap(~sub_id, nrow = 10, ncol = 18) +
@@ -72,7 +72,7 @@ plot_longitudinal <- function(x_arg , y ) {
   )
 }
 
-plot_longitudinal(sub_id, )
+plot_longitudinal(sub_id, pos_affect)
 
 
 ```
@@ -100,7 +100,7 @@ plot_longitudinal <- function(x, y) {
   mmse_tot <- cmpst_tot$mmse_tot
 
     print(
-      ggplot(cmpst_all, aes(visit, x, group = patient_id)) + geom_point(size = 0.5) + geom_line() + facet_grid(y)
+      ggplot(cmpst_all, aes(visit, x, group = patient_id)) + geom_line() + facet_grid(y)
       )
 }
 
