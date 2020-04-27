@@ -48,7 +48,7 @@ cmpst_hvlt_immed <- cmpst_hvlt %>%
 
 #hvlt_discrim
 cmpst_hvlt_discrim <- cmpst_all %>%
-  select(patient_id, gender, visit, hvlt_discrim) %>%
+  select(patient_id, tx_text, gender, visit, hvlt_discrim) %>%
  pivot_wider(
   names_from = "visit",
   values_from = "hvlt_discrim",
@@ -169,6 +169,17 @@ cmpst_dssi_net <- cmpst_all %>%
     change = Week14 - Baseline
   )
 
+#ham24tot
+cmpst_ham24tot <- cmpst_all %>%
+  select(patient_id, tx_text, gender, visit, ham24tot) %>%
+ pivot_wider(
+  names_from = "visit",
+  values_from = "ham24tot",
+  ) %>%
+  mutate(
+    change = Week14 - Baseline
+  )
+
 
 
 ```
@@ -216,7 +227,7 @@ sum_stat <- function(x) {
   return(result)
 }
 
-sum_stat(cmpst_madrs)
+sum_stat(cmpst_ham24tot)
 
 ```
 
