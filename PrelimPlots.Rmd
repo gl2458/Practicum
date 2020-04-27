@@ -80,11 +80,6 @@ Comment: Lots of observations are missing Week14.
 
 ```{r hvlt_discrim}
 
-#longitudinal plots
-cmpst_hvlt %>%
-  filter(patient_id == 4001) %>%
-  ggplot(aes(x=visit, y = hvlt_discrim)) +
-  geom_point() 
 
 
 #calculate the difference
