@@ -186,7 +186,7 @@ cmpst_ham24tot <- cmpst_all %>%
 
 
 
-function
+summary statistics function
 
 ```{r}
 
