@@ -1,0 +1,25 @@
+---
+title: "table1 week9"
+author: "Rachel Lee"
+date: "4/30/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+library(tidyverse)
+
+cmpst_all = read_csv(file = "/Users/rachellee/Google Drive/Practicum/Data/cmpst_all.csv") %>%
+ janitor::clean_names() %>%
+ mutate( visit = forcats::fct_relevel(visit, c("Screen", "Baseline", "Week3", "Week6", "Week9", "Week14", "Week24")))
+
+```
+
+
+
+
+
