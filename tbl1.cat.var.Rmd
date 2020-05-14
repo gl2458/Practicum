@@ -1,0 +1,177 @@
+---
+title: "tbl1.cat.var"
+author: "Rachel Lee"
+date: "5/8/2020"
+output: html_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r}
+library("writexl")
+library(tidyverse)
+
+cmpst_all = read_csv(file = "/Users/rachellee/Google Drive/Practicum/Data/cmpst_all.csv") %>%
+ janitor::clean_names() %>%
+ mutate( visit = forcats::fct_relevel(visit, c("Screen", "Baseline", "Week3", "Week6", "Week9", "Week14", "Week24", "End of Treatment")))
+
+```
+
+
+ALL
+
+```{r}
+N_all <- cmpst_all%>%
+  filter(visit == "Week9") %>%
+  select(patient_id)%>%
+  distinct() %>%
+  count()
+
+N_all
+```
+
+AGE
+
+```{r}
+N_age <- cmpst_all %>%
+  filter(visit == "Week24") %>%
+  select(age) %>%
+  summarize(
+    n(),
+    mean(age),
+    sd(age),
+  )
+```
+
+
+```{r}
+N_age_trt <- cmpst_all %>%
+  filter(visit == "Week24") %>%
+  group_by(tx_text) %>%
+  select(age) %>%
+    summarize(
+    n(),
+    mean(age),
+    sd(age),
+  )
+
+write_xlsx(N_age_trt, "/Users/rachellee/Google Drive/Practicum/catvarsumstat//N_age_trt.xlsx")
+
+
+
+N_age_site <- cmpst_all %>%
+  filter(visit == "Week24") %>%
+  group_by(site) %>%
+  select(age) %>%
+    summarize(
+    n(),
+    mean(age),
+    sd(age),
+  )
+
+write_xlsx(N_age_site, "/Users/rachellee/Google Drive/Practicum/catvarsumstat//N_age_site.xlsx")
+
+
+
+
+
+```
+
+
+GENDER 
+
+```{r}
+
+N_gender <- cmpst_all %>%
+  filter(visit == "Week24") %>%
+  group_by(gender) %>%
+  count()
+
+N_gender_trt <- cmpst_all %>%
+  filter(visit == "Week24") %>%
+  group_by(gender, tx_text) %>%
+  count()
+
+N_gender_site <-  cmpst_all %>%
+  filter(visit == "Week24") %>%
+  group_by(gender, site) %>%
+  count()
+```
+
+
+Race
+
+```{r}
+N_race <- cmpst_all %>%
+  filter(visit == "Week24") %>%
+  group_by(race) %>%
+  count()
+
+N_race_trt <- cmpst_all %>%
+  filter(visit == "Week24") %>%
+  group_by(race, tx_text) %>%
+  count()
+
+N_race_site <-  cmpst_all %>%
+  filter(visit == "Week24") %>%
+  group_by(race, site) %>%
+  count()
+
+```
+
+Site
+```{r}
+
+N_site <- cmpst_all %>%
+  filter(visit == "Week24") %>%
+  group_by(site) %>%
+  count()
+
+N_site_trt <- cmpst_all %>%
+  filter(visit == "Week24") %>%
+  group_by(site, tx_text) %>%
+  count()
+
+```
+
+
+```{r}
+
+#N_all
+  write_xlsx(N_all, "/Users/rachellee/Google Drive/Practicum/catvarsumstat//N_all.xlsx")
+
+#N_age
+  write_xlsx(N_age, "/Users/rachellee/Google Drive/Practicum/catvarsumstat//N_age.xlsx")
+  
+  
+#N_gender
+ write_xlsx(N_gender, "/Users/rachellee/Google Drive/Practicum/catvarsumstat//N_gender.xlsx")
+ 
+#N_gender_trt
+ write_xlsx(N_gender_trt, "/Users/rachellee/Google Drive/Practicum/catvarsumstat//N_gender_trt.xlsx")
+ 
+#N_gender_site
+ write_xlsx(N_gender_site, "/Users/rachellee/Google Drive/Practicum/catvarsumstat//N_gender_site.xlsx")
+
+#N_race
+  write_xlsx(N_race, "/Users/rachellee/Google Drive/Practicum/catvarsumstat//N_race.xlsx")
+
+#N_race_trt
+  write_xlsx(N_race_trt, "/Users/rachellee/Google Drive/Practicum/catvarsumstat//N_race_trt.xlsx")
+
+
+#N_race_site
+  write_xlsx(N_race_site, "/Users/rachellee/Google Drive/Practicum/catvarsumstat//N_race_site.xlsx")
+
+#N_site
+  write_xlsx(N_site, "/Users/rachellee/Google Drive/Practicum/catvarsumstat//N_site.xlsx")
+
+N_site_trt
+  write_xlsx(N_site_trt, "/Users/rachellee/Google Drive/Practicum/catvarsumstat//N_site_trt.xlsx")
+
+
+
+```
+
+
