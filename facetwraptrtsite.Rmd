@@ -1,0 +1,194 @@
+---
+title: "facetwraptrtsite"
+author: "Rachel Lee"
+date: "5/14/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+
+```{r dataimport}
+library(tidyverse)
+library(readxl)
+
+cmpst_all<- read_csv(file = "/Users/rachellee/Google Drive/Practicum/Data/cmpst_all.csv") %>%
+ janitor::clean_names() %>%
+ mutate( visit = forcats::fct_relevel(visit, c("Screen", "Baseline", "Week3", "Week6", "Week9", "Week14", "Week24", "End of Treatment")))
+
+
+cmpst_all_2 = read_excel("/Users/rachellee/Google Drive/Practicum/Data/CMPSTBaselineVariables.xlsx", sheet = NULL,
+  range = NULL,
+  col_names = TRUE,
+  col_types = NULL ) %>%
+  janitor::clean_names() 
+
+#combine two datasets and rename "mms_etot" to "mmse_tot"
+cmpst_tot = 
+  left_join(cmpst_all, cmpst_all_2, by = "sub_id", no.dups = TRUE) %>%
+  rename(mmse_tot = mms_etot) %>%
+  janitor::clean_names()
+
+cmpst_tot
+
+
+```
+
+
+
+
+All patients
+
+```{r facetwrappatientid}
+
+plot_longitudinal <- function(x_arg , y ) {
+  
+  pos_affect <- cmpst_all$pos_affect
+  neg_affect <- cmpst_all$neg_affect
+  ham24tot <- cmpst_all$ham24tot
+  madrs_total <- cmpst_all$madrs_total
+  visit <- cmpst_all$visit
+  hvlt_immed <- cmpst_all$hvlt_immed
+  hvlt_discrim <- cmpst_all$hvlt_discrim
+  trs_total <- cmpst_all$trs_total
+  dssi_si <- cmpst_all$dssi_si
+  dssi_ss <- cmpst_all$dssi_ss
+  dssi_is <- cmpst_all$dssi_is
+  dssi_net <- cmpst_all$dssi_net
+  gender <- cmpst_all$gender
+  mmse_tot <- cmpst_tot$mmse_tot
+  
+  
+    print( ggplot(cmpst_tot, aes(visit, y)) + theme(axis.text.x = element_text(size=3), axis.text.y = element_text(size=3), strip.text = element_text(size=3)) +
+    theme(
+  strip.background = element_blank()) +
+    facet_wrap(~sub_id, nrow = 10, ncol = 18) +
+    theme(panel.spacing = unit(0.2, "lines")) +
+    theme(panel.background = element_rect(fill = "white", colour = "grey50"))
+  )
+}
+
+plot_longitudinal(sub_id, pos_affect)
+
+
+```
+
+
+Facet by treatment and site
+
+```{r}
+plot_longitudinal <- function(x, y) {
+  
+  pos_affect <- cmpst_all$pos_affect
+  neg_affect <- cmpst_all$neg_affect
+  ham24tot <- cmpst_all$ham24tot
+  madrs_total <- cmpst_all$madrs_total
+  visit <- cmpst_all$visit
+  hvlt_immed <- cmpst_all$hvlt_immed
+  hvlt_discrim <- cmpst_all$hvlt_discrim
+  trs_total <- cmpst_all$trs_total
+  dssi_si <- cmpst_all$dssi_si
+  dssi_ss <- cmpst_all$dssi_ss
+  dssi_is <- cmpst_all$dssi_is
+  dssi_net <- cmpst_all$dssi_net
+  gender <- cmpst_all$gender
+  tx_text <- cmpst_all$tx_text
+  mmse_tot <- cmpst_tot$mmse_tot
+
+    print(
+      ggplot(cmpst_all, aes(visit, x, group = patient_id)) + geom_line() + facet_grid(y)
+      )
+}
+
+
+black_7_text <- element_text(size = 7)
+
+```
+
+pos_affect by treatment
+```{r}
+plot_longitudinal(pos_affect, ~tx_text + site) + theme(axis.text.x = black_7_text) 
+
+```
+
+neg_affect by treatment
+```{r}
+plot_longitudinal(neg_affect, ~tx_text + site) + theme(axis.text.x = black_7_text) 
+
+```
+
+ham24tot
+```{r}
+plot_longitudinal(ham24tot, ~tx_text + site) + theme(axis.text.x = black_7_text) 
+```
+
+hvlt_discrim
+```{r}
+plot_longitudinal(hvlt_discrim, ~tx_text + site) + theme(axis.text.x = black_7_text) 
+plot_longitudinal(hvlt_discrim, ~site) + theme(axis.text.x = black_7_text) 
+
+```
+
+hvlt_immed
+```{r}
+plot_longitudinal(hvlt_immed, ~tx_text + site) + theme(axis.text.x = black_7_text) 
+
+```
+
+madrs_total
+```{r}
+plot_longitudinal(madrs_total, ~tx_text + site) + theme(axis.text.x = black_7_text) 
+
+```
+
+trs_total
+```{r}
+plot_longitudinal(trs_total, ~tx_text + site) + theme(axis.text.x = black_7_text) 
+
+```
+
+dssi_is
+```{r}
+plot_longitudinal(dssi_is, ~tx_text + site) + theme(axis.text.x = black_7_text) 
+
+```
+
+dssi_si
+```{r}
+plot_longitudinal(dssi_si, ~tx_text + site) + theme(axis.text.x = black_7_text) 
+
+```
+
+dssi_ss
+```{r}
+plot_longitudinal(dssi_ss, ~tx_text) + theme(axis.text.x = black_7_text) 
+
+```
+
+dssi_net
+```{r}
+plot_longitudinal(dssi_net, ~tx_text + site) + theme(axis.text.x = black_7_text) 
+
+```
+
+
+select MMSE 
+
+```{r}
+
+cmpst_mmse <- cmpst_tot %>%
+  select(sub_id, tx_text_x, visit_x, gender_x, ham24tot_x, mmse_tot) %>%
+  filter(visit_x == "Baseline")
+
+cmpst_mmse
+
+ggplot(cmpst_mmse, aes(x = mmse_tot, y = ham24tot_x )) + geom_point() + facet_grid(~tx_text_x + site)
+
+```
+
+
+
+
