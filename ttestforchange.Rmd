@@ -25,11 +25,11 @@ cmpst_all = read_csv(file = "/Users/rachellee/Google Drive/Practicum/Data/cmpst_
 str(cmpst_all)
 
 #hvlt
-cmpst_hvlt <- select(cmpst_all, patient_id, tx_text, gender, visit, hvlt_immed, hvlt_discrim) 
+cmpst_hvlt <- select(cmpst_all, patient_id, tx_text, gender, visit, site, hvlt_immed, hvlt_discrim) 
 
 #hvlt_immed
 cmpst_hvlt_immed <- cmpst_hvlt %>%
-  select(patient_id, gender, tx_text, visit, hvlt_immed) %>%
+  select(patient_id, gender, tx_text, visit, site, hvlt_immed) %>%
  pivot_wider(
   names_from = "visit",
   values_from = "hvlt_immed",
@@ -41,7 +41,7 @@ cmpst_hvlt_immed <- cmpst_hvlt %>%
 
 #hvlt_discrim
 cmpst_hvlt_discrim <- cmpst_all %>%
-  select(patient_id, tx_text, gender, visit, hvlt_discrim) %>%
+  select(patient_id, tx_text, gender, visit, site, hvlt_discrim) %>%
  pivot_wider(
   names_from = "visit",
   values_from = "hvlt_discrim",
@@ -54,10 +54,10 @@ cmpst_hvlt_discrim <- cmpst_all %>%
 
 #trs_total
 cmpst_trs <- cmpst_all %>%
-  select(patient_id, tx_text, gender, visit, trs_total) 
+  select(patient_id, tx_text, gender, visit, site, trs_total) 
 
 cmpst_trs <- cmpst_all %>%
-  select(patient_id, tx_text, gender, visit, trs_total) %>%
+  select(patient_id, tx_text, gender, visit, site, trs_total) %>%
  pivot_wider(
   names_from = "visit",
   values_from = "trs_total",
@@ -69,11 +69,11 @@ cmpst_trs <- cmpst_all %>%
 
 #PANAS
 cmpst_panas <- cmpst_all %>%
-  select(patient_id, tx_text, gender, visit, pos_affect, neg_affect) 
+  select(patient_id, tx_text, gender, visit, site, pos_affect, neg_affect) 
 
 ##pos_affect
 cmpst_panas_pos <- cmpst_panas %>%
-  select(patient_id, tx_text, gender, visit, pos_affect) %>%
+  select(patient_id, tx_text, gender, visit, site, pos_affect) %>%
  pivot_wider(
   names_from = "visit",
   values_from = "pos_affect",
@@ -84,7 +84,7 @@ cmpst_panas_pos <- cmpst_panas %>%
 
 ##neg_affect
 cmpst_panas_neg <- cmpst_panas %>%
-  select(patient_id, tx_text, gender, visit, neg_affect) %>%
+  select(patient_id, tx_text, gender, visit, site, neg_affect) %>%
  pivot_wider(
   names_from = "visit",
   values_from = "neg_affect",
@@ -96,7 +96,7 @@ cmpst_panas_neg <- cmpst_panas %>%
 
 #madrs
 cmpst_madrs <- cmpst_all %>%
-  select(patient_id, tx_text, gender, visit, madrs_total) %>%
+  select(patient_id, tx_text, gender, visit, site, madrs_total) %>%
    mutate( visit = forcats::fct_relevel(visit, c("Screen", "Baseline", "Week3", "Week6", "Week9", "Week14", "Week24"))) %>%
  pivot_wider(
   names_from = "visit",
@@ -113,7 +113,7 @@ cmpst_madrs <- cmpst_all %>%
 #dssi_si
 
 cmpst_dssi_si <- cmpst_all %>%
-  select(patient_id, tx_text, gender, visit, dssi_si) %>%
+  select(patient_id, tx_text, gender, visit, site, dssi_si) %>%
  pivot_wider(
   names_from = "visit",
   values_from = "dssi_si",
@@ -126,7 +126,7 @@ cmpst_dssi_si <- cmpst_all %>%
 #dssi_ss
 
 cmpst_dssi_ss <- cmpst_all %>%
-  select(patient_id, tx_text, gender, visit, dssi_ss) %>%
+  select(patient_id, tx_text, gender, visit, site, dssi_ss) %>%
  pivot_wider(
   names_from = "visit",
   values_from = "dssi_ss",
@@ -139,7 +139,7 @@ cmpst_dssi_ss <- cmpst_all %>%
 
 #dssi_is
 cmpst_dssi_is <- cmpst_all %>%
-  select(patient_id, tx_text, gender, visit, dssi_is) %>%
+  select(patient_id, tx_text, gender, visit, site, dssi_is) %>%
  pivot_wider(
   names_from = "visit",
   values_from = "dssi_is",
@@ -153,7 +153,7 @@ cmpst_dssi_is <- cmpst_all %>%
 
 #dssi_net
 cmpst_dssi_net <- cmpst_all %>%
-  select(patient_id, tx_text, gender, visit, dssi_net) %>%
+  select(patient_id, tx_text, gender, visit, site, dssi_net) %>%
  pivot_wider(
   names_from = "visit",
   values_from = "dssi_net",
@@ -164,7 +164,7 @@ cmpst_dssi_net <- cmpst_all %>%
 
 #ham24tot
 cmpst_ham24tot <- cmpst_all %>%
-  select(patient_id, tx_text, gender, visit, ham24tot) %>%
+  select(patient_id, tx_text, gender, visit, site, ham24tot) %>%
  pivot_wider(
   names_from = "visit",
   values_from = "ham24tot",
@@ -176,10 +176,10 @@ cmpst_ham24tot <- cmpst_all %>%
 
 ```
 
-ttest for 'change'
+ttest for 'change' by treatment
 
 ```{r}
-pvalue_change = function(x, y) {
+trt_pvalue_change = function(x, y) {
 
   pos_affect <- cmpst_panas_pos$change
   neg_affect <- cmpst_panas_neg$change
@@ -196,8 +196,35 @@ pvalue_change = function(x, y) {
   t.test(x ~ tx_text, y)
 }
 
-pvalue_change(trs_total, cmpst_trs)
+trt_pvalue_change(madrs_total, cmpst_madrs)
 
 
 ```
 
+
+
+
+ttest for 'change' by site
+
+```{r}
+site_pvalue_change = function(x, y) {
+
+  pos_affect <- cmpst_panas_pos$change
+  neg_affect <- cmpst_panas_neg$change
+  ham24tot <- cmpst_ham24tot$change
+  madrs_total <- cmpst_madrs$change
+  hvlt_immed <- cmpst_hvlt_immed$change
+  hvlt_discrim <- cmpst_hvlt_discrim$change
+  trs_total <- cmpst_trs$change
+  dssi_si <- cmpst_dssi_si$change
+  dssi_ss <- cmpst_dssi_ss$change
+  dssi_is <- cmpst_dssi_is$change
+  dssi_net <- cmpst_dssi_net$change
+
+  t.test(x ~ site, y)
+}
+
+site_pvalue_change(trs_total, cmpst_trs)
+
+
+```
