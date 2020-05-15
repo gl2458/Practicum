@@ -254,8 +254,6 @@ concat <- concat %>%
 
 
 
-concat2 <- rbind(sum_stat(cmpst_hvlt_immed), sum_stat(cmpst_hvlt_discrim))
-
 sum_stat(cmpst_hvlt_immed)
 ```
 
