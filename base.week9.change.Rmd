@@ -1,0 +1,266 @@
+---
+title: "change9"
+author: "Rachel Lee"
+date: "5/15/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r}
+library(tidyverse)
+library("writexl")
+
+
+cmpst_all = read_csv(file = "/Users/rachellee/Google Drive/Practicum/Data/cmpst_all.csv") %>%
+ janitor::clean_names() %>%
+ mutate( visit = forcats::fct_relevel(visit, c("Screen", "Baseline", "Week3", "Week6", "Week9", "Week14", "Week24")))
+
+
+#names(cmpst_all)
+```
+
+
+
+```{r}
+
+#hvlt
+cmpst_hvlt <- select(cmpst_all, patient_id, tx_text, site, gender, visit, hvlt_immed, hvlt_discrim) 
+
+#hvlt_immed
+cmpst_hvlt_immed <- cmpst_hvlt %>%
+  select(patient_id, gender, tx_text, visit, site, hvlt_immed) %>%
+ pivot_wider(
+  names_from = "visit",
+  values_from = "hvlt_immed",
+  ) %>%
+  mutate(
+    change = Week9 - Baseline
+  )
+
+#hvlt_discrim
+cmpst_hvlt_discrim <- cmpst_all %>%
+  select(patient_id, tx_text, gender, visit, site, hvlt_discrim) %>%
+ pivot_wider(
+  names_from = "visit",
+  values_from = "hvlt_discrim",
+  ) %>%
+  select(-Week24) %>%
+  mutate(
+    change = Week9 - Baseline
+  )
+
+
+#trs_total
+cmpst_trs <- cmpst_all %>%
+  select(patient_id, tx_text, gender, visit, site, trs_total) 
+
+cmpst_trs <- cmpst_all %>%
+  select(patient_id, tx_text, gender, visit, site, trs_total) %>%
+ pivot_wider(
+  names_from = "visit",
+  values_from = "trs_total",
+  ) %>%
+  mutate(
+    change = Week9 - Week3
+  )
+
+
+#PANAS
+cmpst_panas <- cmpst_all %>%
+  select(patient_id, tx_text, gender, visit, site, pos_affect, neg_affect) 
+
+##pos_affect
+cmpst_panas_pos <- cmpst_panas %>%
+  select(patient_id, tx_text, gender, visit, site, pos_affect) %>%
+ pivot_wider(
+  names_from = "visit",
+  values_from = "pos_affect",
+  ) %>%
+  mutate(
+    change = Week9 - Baseline
+  )
+
+##neg_affect
+cmpst_panas_neg <- cmpst_panas %>%
+  select(patient_id, tx_text, gender, visit, site, neg_affect) %>%
+ pivot_wider(
+  names_from = "visit",
+  values_from = "neg_affect",
+  ) %>%
+  mutate(
+    change = Week9 - Baseline
+  )
+
+
+#madrs
+cmpst_madrs <- cmpst_all %>%
+  select(patient_id, tx_text, gender, visit, site, madrs_total) %>%
+   mutate( visit = forcats::fct_relevel(visit, c("Screen", "Baseline", "Week3", "Week6", "Week9", "Week14", "Week24"))) %>%
+ pivot_wider(
+  names_from = "visit",
+  values_from = "madrs_total",
+  ) %>%
+  mutate(
+    change = Week9 - Baseline
+  ) %>%
+   janitor::clean_names() %>%
+  select(-end_of_treatment) 
+
+
+
+#dssi_si
+
+cmpst_dssi_si <- cmpst_all %>%
+  select(patient_id, tx_text, gender, visit, site, dssi_si) %>%
+ pivot_wider(
+  names_from = "visit",
+  values_from = "dssi_si",
+  ) %>%
+  mutate(
+    change = Week9 - Baseline
+  )
+
+
+#dssi_ss
+
+cmpst_dssi_ss <- cmpst_all %>%
+  select(patient_id, tx_text, gender, visit, site, dssi_ss) %>%
+ pivot_wider(
+  names_from = "visit",
+  values_from = "dssi_ss",
+  ) %>%
+  mutate(
+    change = Week9 - Baseline
+  )
+
+
+
+#dssi_is
+cmpst_dssi_is <- cmpst_all %>%
+  select(patient_id, tx_text, gender, visit, site, dssi_is) %>%
+ pivot_wider(
+  names_from = "visit",
+  values_from = "dssi_is",
+  ) %>%
+  mutate(
+    change = Week9 - Baseline
+  )
+
+
+
+
+#dssi_net
+cmpst_dssi_net <- cmpst_all %>%
+  select(patient_id, tx_text, gender, visit, site, dssi_net) %>%
+ pivot_wider(
+  names_from = "visit",
+  values_from = "dssi_net",
+  ) %>%
+  mutate(
+    change = Week9 - Baseline
+  )
+
+#ham24tot
+cmpst_ham24tot <- cmpst_all %>%
+  select(patient_id, tx_text, gender, visit, site, ham24tot) %>%
+ pivot_wider(
+  names_from = "visit",
+  values_from = "ham24tot",
+  ) %>%
+  mutate(
+    change = Week9 - Baseline
+  )
+
+
+
+```
+
+
+
+
+
+summary statistics function
+
+```{r}
+
+
+sum_stat <- function(x) {
+  
+  total <- x %>%
+    select(change) %>%
+    drop_na() %>%
+  summarise(
+    n(),
+    mean(change),
+    sd(change)
+  )
+  
+  nmisstotal <- x %>%
+   select(change) %>%
+   summarise_all(funs(sum(is.na(.))))
+    
+    
+   bytreatment <- x %>%
+  group_by(tx_text) %>%
+  select(patient_id, tx_text, change) %>%
+  drop_na() %>%
+ summarise(
+   n(),
+   mean = mean(change),
+   sd = sd(change)
+ )
+   
+   nmissbytreatment <- x %>%
+   group_by(tx_text) %>%
+   select(change) %>%
+   summarise_all(funs(sum(is.na(.))))
+   
+    bysite <- x %>%
+  group_by(site) %>%
+  select(patient_id, site, change) %>%
+  drop_na() %>%
+ summarise(
+   n(),
+   mean = mean(change),
+   sd = sd(change)
+ )
+   
+   nmissbysite <- x %>%
+   group_by(site) %>%
+   select(change) %>%
+   summarise_all(funs(sum(is.na(.))))
+   
+   
+   result <- data.frame(c(total, nmisstotal, bytreatment, nmissbytreatment, bysite, nmissbysite))
+   
+  return(result)
+}
+
+
+
+concat <- rbind(sum_stat(cmpst_madrs), sum_stat(cmpst_ham24tot), sum_stat(cmpst_panas_pos), sum_stat(cmpst_panas_neg), sum_stat(cmpst_dssi_si), sum_stat(cmpst_dssi_ss), sum_stat(cmpst_dssi_is), sum_stat(cmpst_dssi_net))
+
+
+concat$name <- c("madrs", "madrs", "hamd", "hamd", "pos_affect", "pos_affect", "neg_affect", "neg_affect", "dssi_si", "dssi_si", "dssi_ss", "dssi_ss", "dssi_is", "dssi_is", "dssi_net", "dssi_net")
+
+concat <- concat %>%
+   janitor::clean_names() 
+
+concat <- concat %>%
+  select(name, n, change, mean_change, sd_change, tx_text, n_1, change_1, mean, sd, site, n_2, change_2, mean_1, sd_1)
+
+
+
+concat2 <- rbind(sum_stat(cmpst_hvlt_immed), sum_stat(cmpst_hvlt_discrim))
+
+sum_stat(cmpst_hvlt_immed)
+```
+
+```{r}
+write_xlsx(concat,"/Users/rachellee/Google Drive/Practicum/Meeting7/wk9change.xlsx")
+```
+
+
