@@ -13,8 +13,9 @@ cmpst_change <- read_csv(file = "/Users/rachellee/Google Drive/Practicum/Data/cm
 
 cmpst_change <- data.frame(cmpst_change)
 
+#calculate change from baseline 
 
-cmpst_hamd <- cmpst_change %>%
+cmpst_hamd_change_w <- cmpst_change %>%
   select(patient_id, tx_text, gender, visit, site, ham24tot) %>%
   pivot_wider(
     names_from = "visit",
@@ -26,6 +27,269 @@ cmpst_hamd <- cmpst_change %>%
     change9 = Week9 - Baseline,
     change14 = Week14 - Baseline
   )
+
+#long format
+cmpst_hamd_change_l <- cmpst_hamd_change_w %>%
+  pivot_longer(
+    change3:change14 , 
+    names_to = "visit" ,
+    values_to = "hamd_change"
+  ) %>%
+  select(patient_id, tx_text, gender, site, visit, hamd_change)
+
+
+cmpst_hamd_change_l$visit <- revalue(cmpst_hamd_change_l$visit, c("change3" = 3, "change6" =6, "change9"=9, "change14"=14)) %>%
+  as.numeric(cmpst_hamd_change_l$visit)
+
+cmpst_hamd_change_l <- data.frame(cmpst_hamd_change_l)
+
+#####################################################
+#linear link function
+#####################################################
+
+#pre-lcmm plot
+ggplot(cmpst_hamd_change_l, aes(visit, hamd_change, group = patient_id)) + geom_point(alpha = 0.3) + geom_line(alpha = 0.3) 
+
+#ng = 2
+hamd_change_linear_2 <- lcmm(hamd_change ~ visit, random = ~ visit, subject = 'patient_id', mixture = ~visit, ng = 2, data = cmpst_hamd_change_l, link = "linear", idiag = FALSE, na.action = 1)
+summary(hamd_change_linear_2)
+plot(hamd_change_linear_2, which="linkfunction", bty="l")
+plot(hamd_change_linear_2, which="postprob", bty="l")
+
+
+class_hamd_change_linear_2 <- left_join(cmpst_hamd_change_l, data.frame(hamd_change_linear_2$pprob), by = "patient_id", copy = FALSE)
+class_hamd_change_linear_2$class <- as.factor(class_hamd_change_linear_2$class)
+
+ggplot(class_hamd_change_linear_2, aes(visit, hamd_change, group = patient_id, color = class)) + geom_point(alpha = 0.3) + geom_line(alpha = 0.3) +
+  ggtitle("linear, ng=2") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+#ng = 3
+hamd_change_linear_3 <- lcmm(hamd_change ~ visit, random = ~ visit, subject = 'patient_id', mixture = ~visit, ng = 3, data = cmpst_hamd_change_l, link = "linear", idiag = FALSE, na.action = 1)
+summary(hamd_change_linear_3)
+plot(hamd_change_linear_3, which="linkfunction", bty="l")
+plot(hamd_change_linear_3, which="postprob", bty="l")
+
+class_hamd_change_linear_3 <- left_join(cmpst_hamd_change_l, data.frame(hamd_change_linear_3$pprob), by = "patient_id", copy = FALSE)
+class_hamd_change_linear_3$class <- as.factor(class_hamd_change_linear_3$class)
+
+ggplot(class_hamd_change_linear_3, aes(visit, hamd_change, group = patient_id, color = class)) + geom_point(alpha = 0.3) + geom_line(alpha = 0.3) +
+  ggtitle("linear, ng=3") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+
+#ng = 4
+hamd_change_linear_4 <- lcmm(hamd_change ~ visit, random = ~ visit, subject = 'patient_id', mixture = ~visit, ng = 4, data = cmpst_hamd_change_l, link = "linear", idiag = FALSE, na.action = 1)
+summary(hamd_change_linear_4)
+plot(hamd_change_linear_4, which="linkfunction", bty="l")
+plot(hamd_change_linear_4, which="postprob", bty="l")
+
+class_hamd_change_linear_4 <- left_join(cmpst_hamd_change_l, data.frame(hamd_change_linear_4$pprob), by = "patient_id", copy = FALSE)
+class_hamd_change_linear_4$class <- as.factor(class_hamd_change_linear_4$class)
+
+ggplot(class_hamd_change_linear_4, aes(visit, hamd_change, group = patient_id, color = class)) + geom_point(alpha = 0.3) + geom_line(alpha = 0.3) +
+  ggtitle("linear, ng=4") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+
+#####################################################
+#beta link function
+#####################################################
+
+#ng = 2
+hamd_change_beta_2 <- lcmm(hamd_change ~ visit, random = ~ visit, subject = 'patient_id', mixture = ~visit, ng = 2, data = cmpst_hamd_change_l, link = "beta", idiag = FALSE, na.action = 1)
+summary(hamd_change_beta_2)
+plot(hamd_change_beta_2, which="linkfunction", bty="l")
+plot(hamd_change_beta_2, which="postprob", bty="l")
+
+
+class_hamd_change_beta_2 <- left_join(cmpst_hamd_change_l, data.frame(hamd_change_beta_2$pprob), by = "patient_id", copy = FALSE)
+class_hamd_change_beta_2$class <- as.factor(class_hamd_change_beta_2$class)
+
+ggplot(class_hamd_change_beta_2, aes(visit, hamd_change, group = patient_id, color = class)) + geom_point(alpha = 0.3) + geom_line(alpha = 0.3) +
+  ggtitle("beta, ng=2") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+#ng = 3
+hamd_change_beta_3 <- lcmm(hamd_change ~ visit, random = ~ visit, subject = 'patient_id', mixture = ~visit, ng = 3, data = cmpst_hamd_change_l, link = "beta", idiag = FALSE, na.action = 1)
+summary(hamd_change_beta_3)
+plot(hamd_change_beta_3, which="linkfunction", bty="l")
+plot(hamd_change_beta_3, which="postprob", bty="l")
+
+class_hamd_change_beta_3 <- left_join(cmpst_hamd_change_l, data.frame(hamd_change_beta_3$pprob), by = "patient_id", copy = FALSE)
+class_hamd_change_beta_3$class <- as.factor(class_hamd_change_beta_3$class)
+
+ggplot(class_hamd_change_beta_3, aes(visit, hamd_change, group = patient_id, color = class)) + geom_point(alpha = 0.3) + geom_line(alpha = 0.3) +
+  ggtitle("beta, ng=3") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+#ng = 4
+hamd_change_beta_4 <- lcmm(hamd_change ~ visit, random = ~ visit, subject = 'patient_id', mixture = ~visit, ng = 4, data = cmpst_hamd_change_l, link = "beta", idiag = FALSE, na.action = 1)
+summary(hamd_change_beta_4)
+plot(hamd_change_beta_4, which="linkfunction", bty="l")
+plot(hamd_change_beta_4, which="postprob", bty="l")
+
+class_hamd_change_beta_4 <- left_join(cmpst_hamd_change_l, data.frame(hamd_change_beta_4$pprob), by = "patient_id", copy = FALSE)
+class_hamd_change_beta_4$class <- as.factor(class_hamd_change_beta_4$class)
+
+ggplot(class_hamd_change_beta_4, aes(visit, hamd_change, group = patient_id, color = class)) + geom_point(alpha = 0.3) + geom_line(alpha = 0.3) +
+  ggtitle("beta, ng=4") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+
+
+#####################################################
+#spline-3 link function
+#####################################################
+
+#ng =2 
+
+hamd_change_spline3_2 <- lcmm(hamd_change ~ visit, random = ~visit, subject = 'patient_id', mixture = ~visit, ng = 2, data = cmpst_hamd_change_l, link="3-equi-splines", idiag = FALSE, na.action = 1)
+summary(hamd_change_spline3_2)
+plot(hamd_change_spline3_2, which = "linkfunction", bty = "l")
+plot(hamd_change_spline3_2, which="postprob", bty="l")
+
+class_hamd_change_spline3_2 <- left_join(cmpst_hamd_change_l, data.frame(hamd_change_spline3_2$pprob), by = "patient_id", copy = FALSE)
+class_hamd_change_spline3_2$class <- as.factor(class_hamd_change_spline3_2$class)
+
+ggplot(class_hamd_change_spline3_2, aes(visit, hamd_change, group = patient_id, color = class)) + geom_point(alpha = 0.3) + geom_line(alpha = 0.3) +
+  ggtitle("spline3, ng=2") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+#ng =3
+
+hamd_change_spline3_3 <- lcmm(hamd_change ~ visit, random = ~visit, subject = 'patient_id', mixture = ~visit, ng = 3, data = cmpst_hamd_change_l, link="3-equi-splines", idiag = FALSE, na.action = 1)
+summary(hamd_change_spline3_3)
+plot(hamd_change_spline3_3, which = "linkfunction", bty = "l")
+plot(hamd_change_spline3_3, which="postprob", bty="l")
+
+class_hamd_change_spline3_3 <- left_join(cmpst_hamd_change_l, data.frame(hamd_change_spline3_3$pprob), by = "patient_id", copy = FALSE)
+class_hamd_change_spline3_3$class <- as.factor(class_hamd_change_spline3_3$class)
+
+ggplot(class_hamd_change_spline3_3, aes(visit, hamd_change, group = patient_id, color = class)) + geom_point(alpha = 0.3) + geom_line(alpha = 0.3) +
+  ggtitle("spline3, ng=3") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+
+#ng = 4
+hamd_change_spline3_4 <- lcmm(hamd_change ~ visit, random = ~visit, subject = 'patient_id', mixture = ~visit, ng = 4, data = cmpst_hamd_change_l, link="3-equi-splines", idiag = FALSE, na.action = 1)
+summary(hamd_change_spline3_4)
+plot(hamd_change_spline3_4, which = "linkfunction", bty = "l")
+plot(hamd_change_spline3_4, which="postprob", bty="l")
+
+class_hamd_change_spline3_4 <- left_join(cmpst_hamd_change_l, data.frame(hamd_change_spline3_4$pprob), by = "patient_id", copy = FALSE)
+class_hamd_change_spline3_4$class <- as.factor(class_hamd_change_spline3_4$class)
+
+ggplot(class_hamd_change_spline3_4, aes(visit, hamd_change, group = patient_id, color = class)) + geom_point(alpha = 0.3) + geom_line(alpha = 0.3) +
+  ggtitle("spline3, ng=4") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+
+
+#####################################################
+#spline-5 link function
+#####################################################
+
+#ng = 2
+
+hamd_change_spline5_2 <- lcmm(hamd_change ~ visit, random = ~visit, subject = 'patient_id', mixture = ~visit, ng = 2, data = cmpst_hamd_change_l, link="5-quant-splines", idiag = FALSE, na.action = 1)
+summary(hamd_change_spline5_2)
+plot(hamd_change_spline5_2, which = "linkfunction", bty = "l")
+plot(hamd_change_spline5_2, which="postprob", bty="l")
+
+class_hamd_change_spline5_2 <- left_join(cmpst_hamd_change_l, data.frame(hamd_change_spline5_2$pprob), by = "patient_id", copy = FALSE)
+class_hamd_change_spline5_2$class <- as.factor(class_hamd_change_spline5_2$class)
+
+ggplot(class_hamd_change_spline5_2, aes(visit, hamd_change, group = patient_id, color = class)) + geom_point(alpha = 0.3) + geom_line(alpha = 0.3) +
+  ggtitle("spline5, ng=2") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+#ng = 3
+
+hamd_change_spline5_3 <- lcmm(hamd_change ~ visit, random = ~visit, subject = 'patient_id', mixture = ~visit, ng = 3, data = cmpst_hamd_change_l, link="5-quant-splines", idiag = FALSE, na.action = 1)
+summary(hamd_change_spline5_3)
+plot(hamd_change_spline5_3, which = "linkfunction", bty = "l")
+plot(hamd_change_spline5_3, which="postprob", bty="l")
+
+class_hamd_change_spline5_3 <- left_join(cmpst_hamd_change_l, data.frame(hamd_change_spline5_3$pprob), by = "patient_id", copy = FALSE)
+class_hamd_change_spline5_3$class <- as.factor(class_hamd_change_spline5_3$class)
+
+ggplot(class_hamd_change_spline5_3, aes(visit, hamd_change, group = patient_id, color = class)) + geom_point(alpha = 0.3) + geom_line(alpha = 0.3) +
+  ggtitle("spline5, ng=3") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+#ng = 4 
+
+hamd_change_spline5_4 <- lcmm(hamd_change ~ visit, random = ~visit, subject = 'patient_id', mixture = ~visit, ng = 4, data = cmpst_hamd_change_l, link="5-quant-splines", idiag = FALSE, na.action = 1)
+summary(hamd_change_spline5_4)
+plot(hamd_change_spline5_4, which = "linkfunction", bty = "l")
+plot(hamd_change_spline5_4, which="postprob", bty="l")
+
+class_hamd_change_spline5_4 <- left_join(cmpst_hamd_change_l, data.frame(hamd_change_spline5_4$pprob), by = "patient_id", copy = FALSE)
+class_hamd_change_spline5_4$class <- as.factor(class_hamd_change_spline5_4$class)
+
+ggplot(class_hamd_change_spline5_4, aes(visit, hamd_change, group = patient_id, color = class)) + geom_point(alpha = 0.3) + geom_line(alpha = 0.3) +
+  ggtitle("spline5, ng=4") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+
+
+
+
+
+
+
+
+
+#summary table
+
+sum_table <- data.frame(
+  summarytable(
+    hamd_change_beta_2, 
+    hamd_change_linear_2, 
+    hamd_change_spline3_2,
+    hamd_change_spline5_2, 
+    hamd_change_beta_3, 
+    hamd_change_linear_3, 
+    hamd_change_spline3_3,
+    hamd_change_spline5_3, 
+    hamd_change_beta_4, 
+    hamd_change_linear_4, 
+    hamd_change_spline3_4, 
+    hamd_change_spline5_4, 
+    which = c("G", "loglik", "npm", "conv", "AIC", "BIC", "%class")))
+
+sum_table$link <- c("hamd_beta_2", 
+                    "linear", 
+                    "spline",
+                    "spline5", 
+                    "beta", 
+                    "linear", 
+                    "spline3",
+                    "spline5", 
+                    "beta", 
+                    "linear", 
+                    "spline3", 
+                    "spline5")
+
+names(sum_table)
+
+sum_table <- sum_table[ , c(11, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10)]
+sum_table
+
+write_xlsx(sum_table,"/Users/rachellee/Google Drive/Practicum/LCMM/class extraction/class_change_sum_table.xlsx")
+
+
 
 
 

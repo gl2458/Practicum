@@ -10,7 +10,6 @@ library(writexl)
 cmpst_all2 <- read_csv(file = "/Users/rachellee/Google Drive/Practicum/Data/cmpst_all2.csv") %>%
   janitor::clean_names() %>%
   filter(visit == "Baseline" | visit == "Week3" | visit == "Week6" | visit == "Week9" | visit == "Week14")
-
 cmpst_all2$visit <- revalue(cmpst_all2$visit, c("Baseline"=0, "Week3" = 3, "Week6" =6, "Week9"=9, "Week14"=14)) %>%
   as.numeric(cmpst_all2$visit)
 
@@ -21,6 +20,7 @@ head(cmpst_all2$patient_id)
 class(cmpst_all2$patient_id)
 
 summary(cmpst_all2)
+
 
 #####################################################
 # ng = 2
