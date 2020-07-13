@@ -290,6 +290,19 @@ sum_table
 write_xlsx(sum_table,"/Users/rachellee/Google Drive/Practicum/LCMM/class extraction/class_change_sum_table.xlsx")
 
 
+#################################
+#residual plots
+#################################
 
-
-
+plot(hamd_change_beta_2, cex.main=0.5)
+plot(hamd_change_linear_2, cex.main=0.5)
+plot(hamd_change_spline3_2,cex.main=0.5)
+plot(hamd_change_spline5_2, cex.main=0.5)
+plot(hamd_change_beta_3, cex.main=0.5)
+plot(hamd_change_linear_3, cex.main=0.5)
+plot(hamd_change_spline3_3,cex.main=0.5)
+plot(hamd_change_spline5_3, cex.main=0.5)
+plot(hamd_change_beta_4, cex.main=0.5)
+plot(hamd_change_linear_4, cex.main=0.5)
+plot(hamd_change_spline3_4, cex.main=0.5)
+plot(hamd_change_spline5_4, cex.main=0.5)
