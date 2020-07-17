@@ -22,6 +22,7 @@ cmpst_hamd_change_w <- cmpst_change %>%
     values_from = "ham24tot",
   ) %>%
   mutate(
+    change0 = 0,
     change3 = Week3 - Baseline,
     change6 = Week6 - Baseline,
     change9 = Week9 - Baseline,
@@ -31,15 +32,15 @@ cmpst_hamd_change_w <- cmpst_change %>%
 #long format
 cmpst_hamd_change_l <- cmpst_hamd_change_w %>%
   pivot_longer(
-    change3:change14 , 
+    change0:change14 , 
     names_to = "visit" ,
     values_to = "hamd_change"
   ) %>%
   select(patient_id, tx_text, gender, site, visit, hamd_change)
 
 
-cmpst_hamd_change_l$visit <- revalue(cmpst_hamd_change_l$visit, c("change3" = 3, "change6" =6, "change9"=9, "change14"=14)) %>%
-  as.numeric(cmpst_hamd_change_l$visit)
+cmpst_hamd_change_l$visit <- revalue(cmpst_hamd_change_l$visit, c("change0" = 0, "change3" = 3, "change6" =6, "change9"=9, "change14"=14)) %>%
+as.numeric(cmpst_hamd_change_l$visit)
 
 cmpst_hamd_change_l <- data.frame(cmpst_hamd_change_l)
 
@@ -55,7 +56,6 @@ hamd_change_linear_2 <- lcmm(hamd_change ~ visit, random = ~ visit, subject = 'p
 summary(hamd_change_linear_2)
 plot(hamd_change_linear_2, which="linkfunction", bty="l")
 plot(hamd_change_linear_2, which="postprob", bty="l")
-
 
 class_hamd_change_linear_2 <- left_join(cmpst_hamd_change_l, data.frame(hamd_change_linear_2$pprob), by = "patient_id", copy = FALSE)
 class_hamd_change_linear_2$class <- as.factor(class_hamd_change_linear_2$class)
@@ -287,7 +287,7 @@ names(sum_table)
 sum_table <- sum_table[ , c(11, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10)]
 sum_table
 
-write_xlsx(sum_table,"/Users/rachellee/Google Drive/Practicum/LCMM/class extraction/class_change_sum_table.xlsx")
+write_xlsx(sum_table,"/Users/rachellee/Google Drive/Practicum/LCMM/class extraction/class_change_sum_table2.xlsx")
 
 
 #################################
@@ -306,3 +306,5 @@ plot(hamd_change_beta_4, cex.main=0.5)
 plot(hamd_change_linear_4, cex.main=0.5)
 plot(hamd_change_spline3_4, cex.main=0.5)
 plot(hamd_change_spline5_4, cex.main=0.5)
+
+
