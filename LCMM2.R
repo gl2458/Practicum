@@ -339,15 +339,15 @@ cmpst_change_logit_linear_2 <- left_join(cmpst_change_bl, class_hamd_change_line
 
 #logistic regression
 
-pos_affect_fit <- glm(class ~ gender + age + pos_affect, data = cmpst_change_logit_linear_2, family = binomial() )
+pos_affect_fit_linear2 <- glm(class ~ gender + age + pos_affect, data = cmpst_change_logit_linear_2, family = binomial() )
 
-whodastot_fit <- glm(class ~ gender + age + whodastot, data = cmpst_change_logit_linear_2, family = binomial() )
+whodastot_fit_linear2 <- glm(class ~ gender + age + whodastot, data = cmpst_change_logit_linear_2, family = binomial() )
 
-neg_affect_fit <- glm(class ~ gender + age + neg_affect, data = cmpst_change_logit_linear_2, family = binomial() )
+neg_affect_fit_linear2 <- glm(class ~ gender + age + neg_affect, data = cmpst_change_logit_linear_2, family = binomial() )
 
-madrs_total_fit <- glm(class ~ gender + age + madrs_total, data = cmpst_change_logit_linear_2, family = binomial() )
+madrs_total_fit_linear2 <- glm(class ~ gender + age + madrs_total, data = cmpst_change_logit_linear_2, family = binomial() )
 
-dssi_net_fit <- glm(class ~ gender + age + dssi_net, data = cmpst_change_logit_linear_2, family = binomial() )
+dssi_net_fit_linear2 <- glm(class ~ gender + age + dssi_net, data = cmpst_change_logit_linear_2, family = binomial() )
 
 
 
@@ -356,5 +356,8 @@ dssi_net_fit <- glm(class ~ gender + age + dssi_net, data = cmpst_change_logit_l
 ##data prepared for logistic regression 
 
 cmpst_change_logit_linear_3 <- left_join(cmpst_change_bl, class_hamd_change_linear_3_bl, by = "patient_id", copy = FALSE) 
+
+ggplot(class_hamd_change_linear_3, aes(x = visit, y = hamd_change, group= patient_id , color= class )) + geom_line(alpha = 0.3) + geom_smooth(alpha = 0.5, aes(group=class), method="loess", size=1.5, se=F)  +  labs(x="x",y="y",colour="Latent Class") 
+
 
 
