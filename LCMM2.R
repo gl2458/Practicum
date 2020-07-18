@@ -308,3 +308,53 @@ plot(hamd_change_spline3_4, cex.main=0.5)
 plot(hamd_change_spline5_4, cex.main=0.5)
 
 
+#####################
+#logistic regression
+#####################
+
+#merge class data and original data
+
+
+##linear, ng=2, baseline data extraction
+class_hamd_change_linear_2_bl <- class_hamd_change_linear_2 %>%
+  filter(visit == 0) %>%
+  select(patient_id, class, prob1, prob2, visit)
+
+
+##linear, ng=3, baseline data extraction
+class_hamd_change_linear_3_bl <- class_hamd_change_linear_3 %>%
+  filter(visit == 0) %>%
+  select(patient_id, class, prob1, prob2, visit)
+
+
+cmpst_change_bl <- cmpst_change %>%
+  filter(visit == "Baseline")
+
+
+###################################
+#link = linear, ng = 2 
+##data prepared for logistic regression 
+
+cmpst_change_logit_linear_2 <- left_join(cmpst_change_bl, class_hamd_change_linear_2_bl, by = "patient_id", copy = FALSE) 
+
+#logistic regression
+
+pos_affect_fit <- glm(class ~ gender + age + pos_affect, data = cmpst_change_logit_linear_2, family = binomial() )
+
+whodastot_fit <- glm(class ~ gender + age + whodastot, data = cmpst_change_logit_linear_2, family = binomial() )
+
+neg_affect_fit <- glm(class ~ gender + age + neg_affect, data = cmpst_change_logit_linear_2, family = binomial() )
+
+madrs_total_fit <- glm(class ~ gender + age + madrs_total, data = cmpst_change_logit_linear_2, family = binomial() )
+
+dssi_net_fit <- glm(class ~ gender + age + dssi_net, data = cmpst_change_logit_linear_2, family = binomial() )
+
+
+
+###################################
+#link = linear, ng = 3
+##data prepared for logistic regression 
+
+cmpst_change_logit_linear_3 <- left_join(cmpst_change_bl, class_hamd_change_linear_3_bl, by = "patient_id", copy = FALSE) 
+
+
