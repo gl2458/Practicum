@@ -60,6 +60,7 @@ plot(hamd_change_linear_2, which="postprob", bty="l")
 class_hamd_change_linear_2 <- left_join(cmpst_hamd_change_l, data.frame(hamd_change_linear_2$pprob), by = "patient_id", copy = FALSE)
 class_hamd_change_linear_2$class <- as.factor(class_hamd_change_linear_2$class)
 
+
 ggplot(class_hamd_change_linear_2, aes(visit, hamd_change, group = patient_id, color = class)) + geom_point(alpha = 0.3) + geom_line(alpha = 0.3) +
   ggtitle("linear, ng=2") +
   theme(plot.title = element_text(hjust = 0.5))
@@ -73,7 +74,18 @@ plot(hamd_change_linear_3, which="postprob", bty="l")
 class_hamd_change_linear_3 <- left_join(cmpst_hamd_change_l, data.frame(hamd_change_linear_3$pprob), by = "patient_id", copy = FALSE)
 class_hamd_change_linear_3$class <- as.factor(class_hamd_change_linear_3$class)
 
-ggplot(class_hamd_change_linear_3, aes(visit, hamd_change, group = patient_id, color = class)) + geom_point(alpha = 0.3) + geom_line(alpha = 0.3) +
+#re-ordering class
+class_hamd_change_linear_3$reclass <- class_hamd_change_linear_3$class
+as.data.frame(class_hamd_change_linear_3)
+class_hamd_change_linear_3$reclass <- recode(class_hamd_change_linear_3$reclass, `1` = "b", `2` = "a", `3` = "c") %>%
+class_hamd_change_linear_3$reclass <- recode(class_hamd_change_linear_3$reclass, "a" = 1, "b" = 2, "c" = 3)
+class_hamd_change_linear_3$reclass <- as.factor(class_hamd_change_linear_3$reclass)
+
+reclass_hamd_change_linear_3 <- class_hamd_change_linear_3 %>%
+  select(-class) %>%
+  rename( class = reclass)
+
+ggplot(reclass_hamd_change_linear_3, aes(visit, hamd_change, group = patient_id, color = class)) + geom_point(alpha = 0.3) + geom_line(alpha = 0.3) +
   ggtitle("linear, ng=3") +
   theme(plot.title = element_text(hjust = 0.5))
 
@@ -337,6 +349,11 @@ cmpst_change_bl <- cmpst_change %>%
 
 cmpst_change_logit_linear_2 <- left_join(cmpst_change_bl, class_hamd_change_linear_2_bl, by = "patient_id", copy = FALSE) 
 
+
+#class mean plot 
+ggplot(class_hamd_change_linear_2, aes(x = visit, y = hamd_change, group= patient_id , color= class )) + geom_line(alpha = 0.3) + geom_smooth(alpha = 0.5, aes(group=class), method="loess", size=1.5, se=F)  +  labs(x="x",y="y",colour="Latent Class") 
+
+
 #logistic regression
 
 pos_affect_fit_linear2 <- glm(class ~ gender + age + pos_affect, data = cmpst_change_logit_linear_2, family = binomial() )
@@ -357,6 +374,7 @@ dssi_net_fit_linear2 <- glm(class ~ gender + age + dssi_net, data = cmpst_change
 
 cmpst_change_logit_linear_3 <- left_join(cmpst_change_bl, class_hamd_change_linear_3_bl, by = "patient_id", copy = FALSE) 
 
+#class mean plot
 ggplot(class_hamd_change_linear_3, aes(x = visit, y = hamd_change, group= patient_id , color= class )) + geom_line(alpha = 0.3) + geom_smooth(alpha = 0.5, aes(group=class), method="loess", size=1.5, se=F)  +  labs(x="x",y="y",colour="Latent Class") 
 
 
