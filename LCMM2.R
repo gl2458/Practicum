@@ -61,9 +61,43 @@ class_hamd_change_linear_2 <- left_join(cmpst_hamd_change_l, data.frame(hamd_cha
 class_hamd_change_linear_2$class <- as.factor(class_hamd_change_linear_2$class)
 
 
-ggplot(class_hamd_change_linear_2, aes(visit, hamd_change, group = patient_id, color = class)) + geom_point(alpha = 0.3) + geom_line(alpha = 0.3) +
-  ggtitle("linear, ng=2") +
-  theme(plot.title = element_text(hjust = 0.5))
+#all patient longitudinal plot
+
+ggplot(class_hamd_change_linear_2, aes(visit, hamd_change, group = patient_id, color = class))  + geom_line(alpha = 0.3) +
+  ggtitle("linke = linear, ng = 2") +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 12)
+  ) +
+  scale_x_continuous(breaks = c(0, 3, 6, 9, 14)) + 
+  labs(x = "visit", y = "HAMD Change from Baseline") +
+  theme(
+    axis.title.x = element_text(size = 10),
+    axis.title.y = element_text(size = 10)
+  )
+
+#class mean plot
+ggplot(class_hamd_change_linear_2, aes(x = visit, y = hamd_change, group= patient_id , color= class )) + geom_line(alpha = 0.3) + 
+  geom_smooth(alpha = 0.5, aes(group=class), method="loess", size=1.2, se=F) + 
+  labs(x="visit",y="HAMD Change from Baseline",color= "Latent Class") + 
+  ggtitle("link = linear, ng = 2") +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 12)
+  ) +
+  scale_x_continuous(breaks = c(0, 3, 6, 9, 14)) + 
+  theme(
+    axis.title.x = element_text(size = 10),
+    axis.title.y = element_text(size = 10)
+  )
+
+
+
+
+
+
+
+
+
+
 
 #ng = 3
 hamd_change_linear_3 <- lcmm(hamd_change ~ visit, random = ~ visit, subject = 'patient_id', mixture = ~visit, ng = 3, data = cmpst_hamd_change_l, link = "linear", idiag = FALSE, na.action = 1)
@@ -111,6 +145,18 @@ ggplot(reclass_hamd_change_linear_3, aes(x = visit, y = hamd_change, group= pati
     axis.title.x = element_text(size = 10),
     axis.title.y = element_text(size = 10)
   )
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
