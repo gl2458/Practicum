@@ -64,7 +64,7 @@ class_hamd_change_linear_2$class <- as.factor(class_hamd_change_linear_2$class)
 #all patient longitudinal plot
 
 ggplot(class_hamd_change_linear_2, aes(visit, hamd_change, group = patient_id, color = class))  + geom_line(alpha = 0.3) +
-  ggtitle("linke = linear, ng = 2") +
+  ggtitle("link = linear, ng = 2") +
   theme(
     plot.title = element_text(hjust = 0.5, size = 12)
   ) +
