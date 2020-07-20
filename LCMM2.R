@@ -85,9 +85,32 @@ reclass_hamd_change_linear_3 <- class_hamd_change_linear_3 %>%
   select(-class) %>%
   rename( class = reclass)
 
-ggplot(reclass_hamd_change_linear_3, aes(visit, hamd_change, group = patient_id, color = class)) + geom_point(alpha = 0.3) + geom_line(alpha = 0.3) +
-  ggtitle("linear, ng=3") +
-  theme(plot.title = element_text(hjust = 0.5))
+#all patient longitudinal plot
+ggplot(reclass_hamd_change_linear_3, aes(visit, hamd_change, group = patient_id, color = class))  + geom_line(alpha = 0.3) +
+  ggtitle("link = linear, ng=3") +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 12)
+    ) +
+  scale_x_continuous(breaks = c(0, 3, 6, 9, 14)) + 
+  labs(x = "visit", y = "HAMD Change from Baseline") +
+  theme(
+    axis.title.x = element_text(size = 10),
+    axis.title.y = element_text(size = 10)
+        )
+
+#class mean plot
+ggplot(reclass_hamd_change_linear_3, aes(x = visit, y = hamd_change, group= patient_id , color= class )) + geom_line(alpha = 0.3) + 
+  geom_smooth(alpha = 0.5, aes(group=class), method="loess", size=1.2, se=F) + 
+  labs(x="visit",y="HAMD Change from Baseline",color= "Latent Class") + 
+  ggtitle("link = linear, ng=3") +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 12)
+  ) +
+  scale_x_continuous(breaks = c(0, 3, 6, 9, 14)) + 
+  theme(
+    axis.title.x = element_text(size = 10),
+    axis.title.y = element_text(size = 10)
+  )
 
 
 
@@ -373,9 +396,6 @@ dssi_net_fit_linear2 <- glm(class ~ gender + age + dssi_net, data = cmpst_change
 ##data prepared for logistic regression 
 
 cmpst_change_logit_linear_3 <- left_join(cmpst_change_bl, class_hamd_change_linear_3_bl, by = "patient_id", copy = FALSE) 
-
-#class mean plot
-ggplot(class_hamd_change_linear_3, aes(x = visit, y = hamd_change, group= patient_id , color= class )) + geom_line(alpha = 0.3) + geom_smooth(alpha = 0.5, aes(group=class), method="loess", size=1.5, se=F)  +  labs(x="x",y="y",colour="Latent Class") 
 
 
 
