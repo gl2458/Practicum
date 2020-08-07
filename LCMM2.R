@@ -1,9 +1,11 @@
 install.packages("lcmm")
 install.packages("xlsx")
+install.packages("Amelia")
 library(lcmm)
 library(plyr)
 library(tidyverse)
 library(writexl)
+library(nnet)
 
 #data import
 cmpst_change <- read_csv(file = "/Users/rachellee/Google Drive/Practicum/Data/cmpst_all2.csv") %>%
@@ -136,7 +138,7 @@ ggplot(reclass_hamd_change_linear_3, aes(visit, hamd_change, group = patient_id,
 ggplot(reclass_hamd_change_linear_3, aes(x = visit, y = hamd_change, group= patient_id , color= class )) + geom_line(alpha = 0.3) + 
   geom_smooth(alpha = 0.5, aes(group=class), method="loess", size=1.2, se=F) + 
   labs(x="visit",y="HAMD Change from Baseline",color= "Latent Class") + 
-  ggtitle("link = linear, ng=3") +
+  ggtitle("link = linear, ng = 3") +
   theme(
     plot.title = element_text(hjust = 0.5, size = 12)
   ) +
@@ -389,12 +391,24 @@ plot(hamd_change_spline3_4, cex.main=0.5)
 plot(hamd_change_spline5_4, cex.main=0.5)
 
 
-#####################
-#logistic regression
-#####################
 
-#merge class data and original data
 
+
+
+
+
+######################################################################
+
+#                       logistic regression
+
+######################################################################
+
+
+#merge class extraction data and original data
+
+#original data baseline extraction
+cmpst_change_bl <- cmpst_change %>%
+  filter(visit == "Baseline")
 
 ##linear, ng=2, baseline data extraction
 class_hamd_change_linear_2_bl <- class_hamd_change_linear_2 %>%
@@ -408,40 +422,334 @@ class_hamd_change_linear_3_bl <- class_hamd_change_linear_3 %>%
   select(patient_id, class, prob1, prob2, visit)
 
 
-cmpst_change_bl <- cmpst_change %>%
-  filter(visit == "Baseline")
 
 
-###################################
-#link = linear, ng = 2 
-##data prepared for logistic regression 
+
+
+# missingness map
+missingness <- missmap(cmpst_change_logit_linear_2, col=c("blue", "red"))
 
 cmpst_change_logit_linear_2 <- left_join(cmpst_change_bl, class_hamd_change_linear_2_bl, by = "patient_id", copy = FALSE) 
 
+cmpst_change_logit_linear_2$gender <- as.factor(cmpst_change_logit_linear_2$gender)
+cmpst_change_logit_linear_2$race <- as.factor(cmpst_change_logit_linear_2$race)
+cmpst_change_logit_linear_2$race2 <- cmpst_change_logit_linear_2$race 
+cmpst_change_logit_linear_2$race2 <- recode_factor(cmpst_change_logit_linear_2$race2, "Asian" = "Other", "More than one race" = "Other", "American Indian/Alaska Native" = "Other" )
+cmpst_change_logit_linear_2$race2 <- na_if(cmpst_change_logit_linear_2$race2, "Unknown/not reported")
+cmpst_change_logit_linear_2$race <- cmpst_change_logit_linear_2$race2
+relevel(cmpst_change_logit_linear_2$race, ref = "Other")
 
-#class mean plot 
-ggplot(class_hamd_change_linear_2, aes(x = visit, y = hamd_change, group= patient_id , color= class )) + geom_line(alpha = 0.3) + geom_smooth(alpha = 0.5, aes(group=class), method="loess", size=1.5, se=F)  +  labs(x="x",y="y",colour="Latent Class") 
 
 
-#logistic regression
+#  1. logistic regression (adjusting for age and gender)
+    
+#link = linear, ng = 2 
+    
+
+    # model fitting
+
+age_fit_linear2 <- glm(class ~ gender + age, data = cmpst_change_logit_linear_2, family = binomial(link = "logit") )
+
+race_fit_linear2 <- glm(class ~ gender + age + race, data = cmpst_change_logit_linear_2, family = binomial(link = "logit") )
+
+treatment_fit_linear2 <- glm(class ~ gender + age + tx_text, data = cmpst_change_logit_linear_2, family = binomial(link = "logit") )
+
+race_fit_linear2 <- glm(class ~ gender + age + race, data = cmpst_change_logit_linear_2, family = binomial(link = "logit") )
+
+site_fit_linear2 <- glm(class ~ gender + age + site, data = cmpst_change_logit_linear_2, family = binomial(link = "logit") )
+
+madrs_fit_linear2 <- glm(class ~ gender + age + madrs_total, data = cmpst_change_logit_linear_2, family = binomial(link = "logit") )
 
 pos_affect_fit_linear2 <- glm(class ~ gender + age + pos_affect, data = cmpst_change_logit_linear_2, family = binomial() )
 
-whodastot_fit_linear2 <- glm(class ~ gender + age + whodastot, data = cmpst_change_logit_linear_2, family = binomial() )
-
 neg_affect_fit_linear2 <- glm(class ~ gender + age + neg_affect, data = cmpst_change_logit_linear_2, family = binomial() )
 
-madrs_total_fit_linear2 <- glm(class ~ gender + age + madrs_total, data = cmpst_change_logit_linear_2, family = binomial() )
+dssi_si_fit_linear2 <- glm(class ~ gender + age + dssi_si, data = cmpst_change_logit_linear_2, family = binomial() )
+
+dssi_ss_fit_linear2 <- glm(class ~ gender + age + dssi_ss, data = cmpst_change_logit_linear_2, family = binomial() )
+
+dssi_is_fit_linear2 <- glm(class ~ gender + age + dssi_is, data = cmpst_change_logit_linear_2, family = binomial() )
 
 dssi_net_fit_linear2 <- glm(class ~ gender + age + dssi_net, data = cmpst_change_logit_linear_2, family = binomial() )
+
+hvlt_immed_fit_linear2 <- glm(class ~ gender + age + hvlt_immed, data = cmpst_change_logit_linear_2, family = binomial() )
+
+hvlt_discrim_fit_linear2 <- glm(class ~ gender + age + hvlt_discrim, data = cmpst_change_logit_linear_2, family = binomial() )
+
+trs_total_fit_linear2 <- glm(class ~ gender + age + trs_total, data = cmpst_change_logit_linear_2, family = binomial() )
+
+stroop_word_fit_linear2 <- glm(class ~ gender + age + stroop_word, data = cmpst_change_logit_linear_2, family = binomial() )
+
+stroop_color_fit_linear2 <- glm(class ~ gender + age + stroop_color, data = cmpst_change_logit_linear_2, family = binomial() )
+
+stroop_color_word_fit_linear2 <- glm(class ~ gender + age + stroop_color_word, data = cmpst_change_logit_linear_2, family = binomial() )
+
+    #odds ratio calculation
+
+treatment_fit_linear2 
+race_fit_linear2 
+site_fit_linear2 
+madrs_fit_linear2 
+pos_affect_fit_linear2 
+neg_affect_fit_linear2 
+dssi_si_fit_linear2 
+dssi_ss_fit_linear2 
+dssi_is_fit_linear2 
+dssi_net_fit_linear2 
+hvlt_immed_fit_linear2
+hvlt_discrim_fit_linear2 
+trs_total_fit_linear2 
+stroop_word_fit_linear2 
+stroop_color_fit_linear2
+stroop_color_word_fit_linear2 
+
+pr1 <- function(x_arg) {
+  print(summary(x_arg))
+}
+
+pr1(age_fit_linear2)
+
+
+#OR and CI function
+
+or_ci <- function (x) {
+  or <- exp(tail(coef(x), n = 1)) 
+  ci <- exp(tail(confint.default(x), n =1))
+
+  data.frame(cbind(or, ci))
+}
+
+
+#race
+data.frame(exp(coef(race_fit_linear2)))
+data.frame(exp(confint.default(race_fit_linear2)))
+
+
+#combined dataset
+logistic_ng2 <- rbind( 
+  or_ci(age_fit_linear2)
+  or_ci(treatment_fit_linear2),
+  or_ci(race_fit_linear2),
+  or_ci(site_fit_linear2) ,
+  or_ci(madrs_fit_linear2),
+  or_ci(pos_affect_fit_linear2) ,
+  or_ci(neg_affect_fit_linear2),
+  or_ci(dssi_si_fit_linear2),
+  or_ci(dssi_ss_fit_linear2),
+  or_ci(dssi_is_fit_linear2),
+  or_ci(dssi_net_fit_linear2),
+  or_ci(hvlt_immed_fit_linear2),
+  or_ci(hvlt_discrim_fit_linear2),
+  or_ci(stroop_word_fit_linear2),
+  or_ci(stroop_color_fit_linear2),
+  or_ci(stroop_color_word_fit_linear2)
+  )
+
+
+write_xlsx(logistic_ng2,"/Users/rachellee/Google Drive/Practicum/LCMM/logit_linear_2.xlsx")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 ###################################
+
 #link = linear, ng = 3
+
 ##data prepared for logistic regression 
 
 cmpst_change_logit_linear_3 <- left_join(cmpst_change_bl, class_hamd_change_linear_3_bl, by = "patient_id", copy = FALSE) 
+cmpst_change_logit_linear_3$class <- relevel(cmpst_change_logit_linear_3$class, ref = 1)
+cmpst_change_logit_linear_3$gender <- as.factor(cmpst_change_logit_linear_3$gender)
+cmpst_change_logit_linear_3$site <- as.factor(cmpst_change_logit_linear_3$site)
+
+cmpst_change_logit_linear_3$race <- as.factor(cmpst_change_logit_linear_3$race)
+cmpst_change_logit_linear_3$race2 <- cmpst_change_logit_linear_3$race 
+cmpst_change_logit_linear_3$race2 <- recode_factor(cmpst_change_logit_linear_3$race2, "Asian" = "Other", "More than one race" = "Other", "American Indian/Alaska Native" = "Other" )
+cmpst_change_logit_linear_3$race2 <- na_if(cmpst_change_logit_linear_3$race2, "Unknown/not reported")
+cmpst_change_logit_linear_3$race <- cmpst_change_logit_linear_3$race2
+relevel(cmpst_change_logit_linear_3$race, ref = "Other")
+
+cmpst_change_logit_linear_3$race3 <- NA
+cmpst_change_logit_linear_3$race3[cmpst_change_logit_linear_3$race == "White"] <- "White"
+cmpst_change_logit_linear_3$race3[cmpst_change_logit_linear_3$race == "Black/African American"] <- "Black/African American"
+cmpst_change_logit_linear_3$race3[cmpst_change_logit_linear_3$race == "Other"] <- "Other"
+cmpst_change_logit_linear_3$race3 <- as.factor(cmpst_change_logit_linear_3$race3)
+cmpst_change_logit_linear_3$race3 <- relevel(cmpst_change_logit_linear_3$race3, ref = "Other")
+
+# model fitting
+
+age_fit_linear3 <-  multinom(class ~ age + gender , data = cmpst_change_logit_linear_3 )
+
+race_fit_linear3 <-  multinom(class ~ gender + age + race3 , data = cmpst_change_logit_linear_3, na.action = na.exclude)
+
+race2_fit_linear3 <-  multinom(class ~ gender + age + race2 , data = cmpst_change_logit_linear_3, na.action = na.exclude)
+
+treatment_fit_linear3 <- multinom(class ~ gender + age + tx_text, data = cmpst_change_logit_linear_3 )
+
+race_fit_linear3 <- multinom(class ~ gender + age + race, data = cmpst_change_logit_linear_3 )
+
+site_fit_linear3 <- multinom(class ~ gender + age + site, data = cmpst_change_logit_linear_3 )
+
+madrs_fit_linear3 <- multinom(class ~ gender + age + madrs_total, data = cmpst_change_logit_linear_3 )
+
+pos_affect_fit_linear3 <- multinom(class ~ gender + age + pos_affect, data = cmpst_change_logit_linear_3 )
+
+neg_affect_fit_linear3 <- multinom(class ~ gender + age + neg_affect, data = cmpst_change_logit_linear_3 )
+
+dssi_si_fit_linear3 <- multinom(class ~ gender + age + dssi_si, data = cmpst_change_logit_linear_3 )
+
+dssi_ss_fit_linear3 <- multinom(class ~ gender + age + dssi_ss, data = cmpst_change_logit_linear_3 )
+
+dssi_is_fit_linear3 <- multinom(class ~ gender + age + dssi_is, data = cmpst_change_logit_linear_3 )
+
+dssi_net_fit_linear3 <- multinom(class ~ gender + age + dssi_net, data = cmpst_change_logit_linear_3 )
+
+hvlt_immed_fit_linear3 <- multinom(class ~ gender + age + hvlt_immed, data = cmpst_change_logit_linear_3 )
+
+hvlt_discrim_fit_linear3 <- multinom(class ~ gender + age + hvlt_discrim, data = cmpst_change_logit_linear_3 )
+
+stroop_word_fit_linear3 <- multinom(class ~ gender + age + stroop_word, data = cmpst_change_logit_linear_3 )
+
+stroop_color_fit_linear3 <- multinom(class ~ gender + age + stroop_color, data = cmpst_change_logit_linear_3 )
+
+stroop_color_word_fit_linear3 <- multinom(class ~ gender + age + stroop_color_word, data = cmpst_change_logit_linear_3 )
+
+
+# OR calculation
+
+or_multi <- function (x) {
+  or_1 <- exp( (coef(x)[1,4] )) 
+  or_2 <- exp( (coef(x)[2,4] ))
+
+  data.frame( cbind(or_1, or_2) )
+}
+
+
+logistic_ng3 <- rbind(
+or_multi(treatment_fit_linear3),
+or_multi(site_fit_linear3),
+or_multi(madrs_fit_linear3),
+or_multi(pos_affect_fit_linear3),
+or_multi(neg_affect_fit_linear3),
+or_multi(dssi_si_fit_linear3),
+or_multi(dssi_ss_fit_linear3),
+or_multi(dssi_is_fit_linear3),
+or_multi(dssi_net_fit_linear3),
+or_multi(hvlt_immed_fit_linear3),
+or_multi(hvlt_discrim_fit_linear3),
+or_multi(stroop_word_fit_linear3),
+or_multi(stroop_color_fit_linear3),
+or_multi(stroop_color_word_fit_linear3) )
+
+
+write_xlsx(logistic_ng3,"/Users/rachellee/Google Drive/Practicum/LCMM/multinom_linear_3.xlsx")
+
+#### CI code
+ci_multi <- function(x){
+  tail(as.data.frame(exp(confint(x))), n = 1)
+}
+
+logistic_ci_ng3 <- rbind(
+  ci_multi(treatment_fit_linear3),
+  ci_multi(site_fit_linear3),
+  ci_multi(madrs_fit_linear3),
+  ci_multi(pos_affect_fit_linear3),
+  ci_multi(neg_affect_fit_linear3),
+  ci_multi(dssi_si_fit_linear3),
+  ci_multi(dssi_ss_fit_linear3),
+  ci_multi(dssi_is_fit_linear3),
+  ci_multi(dssi_net_fit_linear3),
+  ci_multi(hvlt_immed_fit_linear3),
+  ci_multi(hvlt_discrim_fit_linear3),
+  ci_multi(stroop_word_fit_linear3),
+  ci_multi(stroop_color_fit_linear3),
+  ci_multi(stroop_color_word_fit_linear3) )
+
+write_xlsx(logistic_ci_ng3,"/Users/rachellee/Google Drive/Practicum/LCMM/multinom_ci_linear_3.xlsx")
+
+
+
+### P - value
+#teststat = summary(multinom)$coefficients/summary(multinom)$standard.errors
+pval = (1 - pnorm(abs(teststat), 0, 1)) * 2
+
+teststat = summary(treatment_fit_linear3)$coefficients/summary(treatment_fit_linear3)$standard.errors
+pval = (1- pnorm(abs(tstat), 0, 1)) *2
+
+pr2 <- function(x_arg){
+  teststat = summary(x_arg)$coefficients/summary(x_arg)$standard.errors
+  
+  pval = (1- pnorm(abs(teststat), 0, 1)) *2
+  
+  cbind(pval[1,4], pval[2,4])
+}
+
+
+logistic_pval_ng3 <- as.data.frame( rbind(
+  pr2(treatment_fit_linear3),
+  pr2(site_fit_linear3),
+  pr2(madrs_fit_linear3),
+  pr2(pos_affect_fit_linear3),
+  pr2(neg_affect_fit_linear3),
+  pr2(dssi_si_fit_linear3),
+  pr2(dssi_ss_fit_linear3),
+  pr2(dssi_is_fit_linear3),
+  pr2(dssi_net_fit_linear3),
+  pr2(hvlt_immed_fit_linear3),
+  pr2(hvlt_discrim_fit_linear3),
+  pr2(stroop_word_fit_linear3),
+  pr2(stroop_color_fit_linear3),
+  pr2(stroop_color_word_fit_linear3) ) )
+
+
+
+write_xlsx(logistic_pval_ng3,"/Users/rachellee/Google Drive/Practicum/LCMM/multinom_pval_linear_3.xlsx")
+
+#age & gender 
+agetest <- summary(age_fit_linear3)$coefficients/summary(age_fit_linear3)$standard.errors
+agepval <- (1- pnorm(abs(agetest), 0, 1)) *2
+
+#race multinomal logistic regression (ng = 3)
+race_or <- as.data.frame(exp(coef(race_fit_linear3)) )
+race_ci <-as.data.frame(exp(confint(race_fit_linear3)))
+race_test <- summary(race_fit_linear3)$coefficients/summary(race_fit_linear3)$standard.errors
+race_pval <- (1- pnorm(abs(race_test), 0, 1)) *2
+
+write_xlsx(race_ci,"/Users/rachellee/Google Drive/Practicum/LCMM/multinom_race_ci_linear_3.xlsx")
+
+
+
+
+
+######################################################
+#QUESTION#
+logit <- function(x, y) {
+  multinom(class ~ gender + age + !!as.name(x), data = y , family = binomial())
+}
+
+logit( x ="pos_affect", cmpst_change_logit_linear_2)
+
+######################################################
+
+
+
+
 
 
 
