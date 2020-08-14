@@ -15,6 +15,8 @@ cmpst_change <- read_csv(file = "/Users/rachellee/Google Drive/Practicum/Data/cm
 
 cmpst_change <- data.frame(cmpst_change)
 
+
+
 #calculate change from baseline 
 
 cmpst_hamd_change_w <- cmpst_change %>%
@@ -92,6 +94,7 @@ ggplot(class_hamd_change_linear_2, aes(x = visit, y = hamd_change, group= patien
   )
 
 
+write_xlsx(class_hamd_change_linear_2,"/Users/rachellee/Google Drive/Practicum/LCMM/class extraction/class_hamd_change_linear_2.xlsx")
 
 
 
@@ -120,6 +123,8 @@ class_hamd_change_linear_3$reclass <- as.factor(class_hamd_change_linear_3$recla
 reclass_hamd_change_linear_3 <- class_hamd_change_linear_3 %>%
   select(-class) %>%
   rename( class = reclass)
+
+
 
 #all patient longitudinal plot
 ggplot(reclass_hamd_change_linear_3, aes(visit, hamd_change, group = patient_id, color = class))  + geom_line(alpha = 0.3) +
@@ -190,6 +195,10 @@ plot(hamd_change_beta_2, which="postprob", bty="l")
 
 class_hamd_change_beta_2 <- left_join(cmpst_hamd_change_l, data.frame(hamd_change_beta_2$pprob), by = "patient_id", copy = FALSE)
 class_hamd_change_beta_2$class <- as.factor(class_hamd_change_beta_2$class)
+
+
+
+
 
 ggplot(class_hamd_change_beta_2, aes(visit, hamd_change, group = patient_id, color = class)) + geom_point(alpha = 0.3) + geom_line(alpha = 0.3) +
   ggtitle("beta, ng=2") +
@@ -735,6 +744,19 @@ write_xlsx(race_ci,"/Users/rachellee/Google Drive/Practicum/LCMM/multinom_race_c
 
 
 
+
+
+#data for table 1 by class
+
+cmpst_class <- read_csv(file = "/Users/rachellee/Google Drive/Practicum/Data/cmpst_all2.csv") %>%
+  janitor::clean_names() %>%
+  filter(visit == "Baseline")
+
+
+cmpst_class <- left_join(cmpst_class, class_hamd_change_linear_2_bl, by = "patient_id", copy = FALSE)
+write_xlsx(cmpst_class,"/Users/rachellee/Google Drive/Practicum/Data/cmpst_class.xlsx")
+
+cmpst_class <- as.data.frame(cmpst_class)
 
 
 ######################################################
